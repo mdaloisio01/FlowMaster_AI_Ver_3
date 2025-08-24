@@ -1,0 +1,8 @@
+{
+  "tasks": [],
+  "_meta": {
+    "phase": 10,
+    "status": "stub",
+    "note": "Scheduler framework stubbed in Phase 10, activation pending Phase 24+"
+  }
+}

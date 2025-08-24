@@ -1,0 +1,158 @@
+[
+    {
+        "name": "reflex_ask_gpt",
+        "path": "reflexes\\reflex_ask_gpt.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_ask_gpt_with_followups",
+        "path": "reflexes\\reflex_ask_gpt_with_followups.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_auto_debug_logs",
+        "path": "reflexes\\reflex_auto_debug_logs.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_core_backup_all",
+        "path": "reflexes\\reflex_core_backup_all.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_core_fix_imports_and_paths",
+        "path": "reflexes\\reflex_core_fix_imports_and_paths.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_core_list_failed_reflexes",
+        "path": "reflexes\\reflex_core_list_failed_reflexes.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_core_self_diagnose",
+        "path": "reflexes\\reflex_core_self_diagnose.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_fix_imports_and_paths",
+        "path": "reflexes\\reflex_fix_imports_and_paths.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_import_updater",
+        "path": "reflexes\\reflex_import_updater.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_list_tools",
+        "path": "reflexes\\reflex_list_tools.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_manifest",
+        "path": "reflexes\\reflex_manifest.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_restaurant_ops_generate_gpt_summary",
+        "path": "reflexes\\reflex_restaurant_ops_generate_gpt_summary.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_self_diagnoser",
+        "path": "reflexes\\reflex_self_diagnoser.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_self_diagnostics",
+        "path": "reflexes\\reflex_self_diagnostics.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_switch_llm",
+        "path": "reflexes\\reflex_switch_llm.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_test_all",
+        "path": "reflexes\\reflex_test_all.py",
+        "group": "core",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_pos_ingest_square",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_pos_ingest_square.py",
+        "group": "restaurant_ops",
+        "docstring": "Cleans up all .pyc and __pycache__ files in the restaurant_ops module."
+    },
+    {
+        "name": "reflex_restaurant_ops_check_reflexes",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_check_reflexes.py",
+        "group": "restaurant_ops",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_restaurant_ops_clean_pyc",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_clean_pyc.py",
+        "group": "restaurant_ops",
+        "docstring": "Deletes all .pyc files recursively under this module folder."
+    },
+    {
+        "name": "reflex_restaurant_ops_daily_digest",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_daily_digest.py",
+        "group": "restaurant_ops",
+        "docstring": "Simulates generating a daily POS summary."
+    },
+    {
+        "name": "reflex_restaurant_ops_fix_gpt_reflexes",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_fix_gpt_reflexes.py",
+        "group": "restaurant_ops",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_restaurant_ops_ingest_pos_manual",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_ingest_pos_manual.py",
+        "group": "restaurant_ops",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_restaurant_ops_ingest_pos_square",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_ingest_pos_square.py",
+        "group": "restaurant_ops",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_restaurant_ops_optimize_menu",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_optimize_menu.py",
+        "group": "restaurant_ops",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_restaurant_ops_run",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_run.py",
+        "group": "restaurant_ops",
+        "docstring": "No docstring found"
+    },
+    {
+        "name": "reflex_restaurant_ops_watch_folder_and_ingest",
+        "path": "modules\\restaurant_ops\\reflexes\\reflex_restaurant_ops_watch_folder_and_ingest.py",
+        "group": "restaurant_ops",
+        "docstring": "No docstring found"
+    }
+]

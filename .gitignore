@@ -1,0 +1,10 @@
+﻿.snapshots/
+
+
+logs/
+will_data.db
+**/__pycache__/
+*.pyc
+.reg_files.json
+.DS_Store
+Thumbs.db

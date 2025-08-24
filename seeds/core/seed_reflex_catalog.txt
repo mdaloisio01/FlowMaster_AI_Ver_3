@@ -1,0 +1,11 @@
+Reflexes Installed:
+- ask_gpt() - Core GPT response system
+- auto_debug_logs() - Logs exceptions from Will's backend
+- summarize_docs() - Parses and logs documents from /data/raw_docs
+- watch_folder_and_ingest() - Monitors /data/raw_docs for new input
+- run_backup() - Saves core files to /backups
+- report_status() - System diagnostics
+- reflex_scrape_url() - Scrapes content from web URLs
+- reflex_verify_structure() - Checks file/folder health against expected layout
+
+Each reflex is a modular skill Will can call on demand.

@@ -1,0 +1,32 @@
+{
+  "core/manifest_db.py": {
+    "phase": 0.2,
+    "hash": "fc4f88",
+    "dependencies": [],
+    "role": "manifest_db"
+  },
+  "core/memory_log_db.py": {
+    "phase": 0.2,
+    "hash": "5f625b",
+    "dependencies": [],
+    "role": "memory_log_db"
+  },
+  "core/reflex_registry_db.py": {
+    "phase": 0.2,
+    "hash": "ba8614",
+    "dependencies": [],
+    "role": "reflex_registry_db"
+  },
+  "core/sqlite_bootstrap.py": {
+    "phase": 0.2,
+    "hash": "fb57a2",
+    "dependencies": [],
+    "role": "sqlite_bootstrap"
+  },
+  "tests/test_phase_0_2_db_lifecycle.py": {
+    "phase": 0.2,
+    "hash": "26db1f",
+    "dependencies": [],
+    "role": "test_phase"
+  }
+}

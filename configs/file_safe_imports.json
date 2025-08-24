@@ -1,0 +1,4 @@
+{
+  "memory.will_memory_engine": ["core.memory.will_memory_engine", "will_memory_engine"],
+  "configs.ironroot_manifest_loader": ["ironroot_manifest_loader", "configs.manifest_loader"]
+}

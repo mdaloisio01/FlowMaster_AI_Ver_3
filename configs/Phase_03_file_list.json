@@ -1,0 +1,18 @@
+{
+  "phase": 0.3,
+  "files_created_or_modified": [
+    "core/trace_logger.py",
+    "logs/boot_trace_log.json",
+    "logs/reflex_trace_log.json",
+    "logs/will_memory_log.json",
+    "reflexes/reflex_core/reflex_trace_ping.py",
+    "sandbox/sandbox_reflex_tests.py",
+    "test.json",
+    "tests/test_phase_0_3_integrity.py",
+    "tools/phase_trace_report.py",
+    "tools/reflex_compliance_guard.py",
+    "tools/tools_check_memory_log_calls.py",
+    "tools/trace_inspector.py",
+    "tools/verify_log_integrity.py"
+  ]
+}

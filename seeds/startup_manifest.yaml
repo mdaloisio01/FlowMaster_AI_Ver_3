@@ -1,0 +1,8 @@
+core:
+  ironroot_summary: core/seed_ironroot_summary.md
+  operator_preferences: core/seed_operator_preferences.md
+  origin_story: core/seed_origin_story.md
+system:
+  identity: system/seed_identity.md
+utility:
+  reflex_catalog: utility/reflex_catalog.md

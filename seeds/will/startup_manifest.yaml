@@ -1,0 +1,45 @@
+startup_manifest:
+  version: '1.0'
+  description: "Master seed loader and validator for Will\u2019s boot process.\nEnsures\
+    \ all core modules, memory configurations, reflex libraries, and optional utilities\
+    \ are available and prepped on launch."
+  seed_directories:
+  - seeds/core
+  - seeds/memory
+  - seeds/system
+  - seeds/security
+  - seeds/utility
+  - seeds/optional
+  required_files:
+  - seeds/core/seed_ironroot_summary.txt
+  - seeds/core/seed_operator_preferences.txt
+  - seeds/core/seed_origin_story.txt
+  - seeds/core/seed_reflex_catalog.txt
+  - seeds/core/reflex_bootstrap_context.py
+  optional_files:
+  - seeds/optional/api_integration_map_seed.md
+  - seeds/optional/ai_model_registry_seed.md
+  - seeds/optional/task_template_seed.md
+  - seeds/optional/custom_parser_seed.md
+  - seeds/optional/custom_unit_conversion_seed.md
+  - seeds/optional/data_normalization_seed.md
+  - seeds/optional/error_categorization_seed.md
+  - seeds/optional/external_dependency_map.md
+  - seeds/optional/persona_seed.md
+  - seeds/optional/proxy_rules_seed.md
+  - seeds/optional/time_awareness_seed.md
+  auto_trigger:
+  - seeds/core/reflex_bootstrap_context.py
+  behaviors:
+    on_missing_required:
+    - log_error
+    - raise_exception
+    on_missing_optional:
+    - log_warning
+    on_startup_success:
+    - log("All seed files loaded.")
+    - run_reflex("reflex_bootstrap_context")
+  notes:
+  - You can expand this to support future folders like seeds/clients or seeds/projects
+  - Add reflexes or CLI triggers in the `auto_trigger` section to customize startup
+    behavior

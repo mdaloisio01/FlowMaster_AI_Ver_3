@@ -1,0 +1,268 @@
+# SPEC-7-FlowMaster\_AI\_Ver\_3—Phase 0.4 Bug Audit & Hardening Plan
+
+## Background
+
+This audit reviews **FlowMaster\_AI\_Ver\_3 (Will.1)** at **Phase 0.4 – Trace Validation & Reflex Compliance**. The stated goals are: enforce phase locks, ensure every reflex/tool emits both **memory** and **trace** events, and validate conformance to Canonical Reflex/CLI templates. The seed arrived as `FlowMaster_AI_Ver_3.zip` and was executed in a clean environment to simulate the “live runtime” expectations.
+
+## Requirements (MoSCoW)
+
+**Must**
+
+* Enforce **REQUIRED\_PHASE** via `core/phase_control.py:get_current_phase()` across all tools/reflexes/tests.
+* Every tool/reflex **must** emit `log_memory_event(... tags, content, phase=...)` **and** `log_trace_event(... tags, content, phase=...)`.
+* All JSON I/O uses `encoding="utf-8"` and **paths use forward slashes** (`/`).
+* Runtime integrity: all files listed in `configs/dev_file_list.md` exist on disk **and** are registered in both
+  `configs/ironroot_manifest_data.json` and `configs/ironroot_file_history_with_dependencies.json`.
+* No ghost logic: no `...` placeholders; no unstubbed calls.
+
+**Should**
+
+* Single source of truth for `REQUIRED_PHASE` (imported from `core.phase_control`).
+* Seeds live under top-level `/seeds/` and are only loaded by test/sandbox code.
+* Compliance guard is AST-based (low false-positives) and phase-aware.
+
+**Could**
+
+* Align DB helpers & tests to **one** schema and path.
+* Add CI smoke that runs the “Phase 0.4 checklist”.
+
+**Won’t (Phase 0.4)**
+
+* Fully implement Phase 0.5 tools (`snapshot_db`, `trace_memory_alignment`) beyond phase-lock checks.
+
+## Method
+
+1. Unzipped the project and executed the Phase 0.4 checklist modules.
+2. Static sweeps for: phase enforcement, memory/trace logging, UTF-8 I/O, path style, ghost code.
+3. Cross-checked manifests vs on-disk files and dev file list.
+4. Exercised each CLI tool/reflex to simulate runtime behavior.
+
+## Findings (defects & fixes)
+
+### A. Manifest / File List Desync (High)
+
+* `configs/dev_file_list.md` uses **backslashes** and includes **.pyc** files; it misses **96** real files.
+* `ironroot_manifest_data.json` / `ironroot_file_history_with_dependencies.json` are **missing most files** (e.g., `history` lacks \~124 entries; `manifest.all_files` lacks \~147).
+
+**Impact**: Fails IronRoot Law (manifest completeness), breaks runtime integrity sweeps.
+
+**Fix**:
+
+* Regenerate `dev_file_list.md` with **forward slashes**, exclude `__pycache__/` and `*.pyc`, alpha-sort.
+* Regenerate `manifest.all_files` & `history` keys to include **every** tracked file with `phase` and `dependencies`.
+
+### B. Phase Authority Split + Missing Constant (High)
+
+* `core/phase_control.py` **does not define** `REQUIRED_PHASE`; most tools define local constants.
+* One test (`tests/test_phase_0_3_integrity.py`) imports phase from `boot.boot_phase_loader` instead of `core.phase_control`.
+
+**Impact**: Drifts from spec (“Phase enforcement must use REQUIRED\_PHASE from phase\_control.py”).
+
+**Fix**:
+
+* Add in `core/phase_control.py`:
+
+  ```py
+  REQUIRED_PHASE = 0.4
+  ```
+* Update **all** tools/reflexes/tests to:
+
+  ```py
+  from core.phase_control import REQUIRED_PHASE, get_current_phase
+  ```
+* Remove per-file `REQUIRED_PHASE` literals.
+
+### C. Missing Memory/Trace Logging in Tools (High)
+
+Many tools **do not emit both logs**. Examples:
+
+* No memory or trace: `tools/trace_inspector.py`, `tools/phase_trace_report.py`, `tools/print_current_phase.py`, `tools/reflex_compliance_guard.py`, `tools/system_check.py`, `tools/verify_log_integrity.py`, `tools/manifest_sync.py`, `tools/path_validator.py`, `tools/fix_file_encoding.py`, etc.
+* Partial fields: several calls omit `tags`, `content`, or `phase` (e.g., `tools/tools_check_db_counts.py`, `reflexes/reflex_core/reflex_loader.py`).
+
+**Impact**: Violates Phase 0.4 goal; undermines trace-memory alignment.
+
+**Fix (pattern)** add to each `run_cli()`:
+
+```py
+from core.memory_interface import log_memory_event
+from core.trace_logger import log_trace_event
+from core.phase_control import REQUIRED_PHASE
+
+log_memory_event(
+  event_text="<tool> start", event_type="tool_run",
+  source="<tool>", tags=["tool","start"], content="starting",
+  phase=REQUIRED_PHASE,
+)
+# ... main work ...
+log_trace_event(
+  description="<tool> done", source="<tool>",
+  tags=["tool","done"], content="ok", phase=REQUIRED_PHASE,
+)
+```
+
+### D. Required Path Injection Missing (Medium)
+
+* Missing `inject_paths()` in: `tests/test_phase_0_3_integrity.py`, `tests/test_phase_0_1_db_integrity.py`, `sandbox/sandbox_reflex_tests.py`, `reflexes/reflex_core/__init__.py`, `tests/__init__.py`.
+
+**Impact**: Imports may fail outside bespoke environments; violates mandatory rule.
+
+**Fix**: Prepend to each file:
+
+```py
+from boot.boot_path_initializer import inject_paths
+inject_paths()
+```
+
+### E. Path Policy Violations (Medium)
+
+* Dev list uses backslashes; memory logs contain **absolute Windows paths** in older entries (e.g., `source` fields).
+
+**Impact**: Cross-platform brittleness; violates “use / even on Windows”.
+
+**Fix**:
+
+* Normalize all emitted `source` values to `__name__` or `Path(__file__).as_posix()`.
+* Normalize any incoming paths with `replace("\\","/")` at boundaries.
+
+### F. Compliance Guard False-Positives (Medium)
+
+* `tools/reflex_compliance_guard.py` flagged `tools/snapshot_db.py` and `tools/trace_memory_alignment.py` as missing enforcement, yet both **hard fail** on phase ≠ 0.5.
+
+**Impact**: Noisy CI; erodes trust in guard.
+
+**Fix**: Make guard AST-based:
+
+* Detect `from core.phase_control import get_current_phase` **and** presence of a comparison to `REQUIRED_PHASE` before executing `run_cli()`.
+* Treat Phase 0.5 tools as **allowed to fail** at Phase 0.4 when invoked.
+
+### G. Package Init Typo (Low)
+
+* `boot/__init.py` should be `boot/__init__.py`.
+
+**Impact**: Inhibits package semantics if `boot` is imported as a package.
+
+**Fix**: Rename to `__init__.py`.
+
+### H. Seeds Location (Low)
+
+* Seed files live in `configs/seeds/*`; spec calls for top-level `/seeds/`.
+
+**Impact**: Confusion; tooling may not find seeds.
+
+**Fix**: Move or symlink to `/seeds/`, and restrict loading to sandbox/test only.
+
+### I. Test Suite / DB API Drift (High)
+
+* Tests expect legacy DB schema & APIs that **don’t exist** in Phase 0.4:
+
+  * `core/manifest_db.py` and `core/reflex_registry_db.py` use `will_data.db` (bare) while `sqlite_bootstrap` uses `root/will_data.db`.
+  * `sqlite_bootstrap` creates `memory_events`, `trace_events`, `boot_events` tables; tests expect `manifest`/`reflex_registry` tables and older function signatures (dict-style inserts).
+  * `tests/test_phase_0_3_integrity.py` calls logging **without** `phase`/`tags`/`content`.
+
+**Impact**: Phase tests fail; DB operations point to inconsistent files.
+
+**Fix options** (choose one path):
+
+1. **Align DB**: extend `sqlite_bootstrap` to create `manifest` and `reflex_registry` tables; update `DB_PATH` in `manifest_db.py` & `reflex_registry_db.py` to `root/will_data.db`; keep new function signatures and update tests accordingly.
+2. **Remove legacy**: if manifest/reflex tables are out-of-scope for 0.4, **rewrite tests** to validate only JSON logs & Phase 0.4 behaviors.
+
+**Minimum to unbreak now** (recommended):
+
+* Unify DB path to `root/will_data.db` in *all* DB helpers.
+* Add missing tables in `sqlite_bootstrap` or gate tests by phase.
+* Update tests to use `core.phase_control.REQUIRED_PHASE` and include `tags`, `content`, `phase` in all log calls.
+
+### J. Ghost Logic / Placeholders (High)
+
+* Several files contain literal `...` placeholders (e.g., `Canonical_*_Template.py`, some tests, `tools/manifest_sync.py`).
+
+**Impact**: Violates “no ghost logic”; creates nondeterministic behavior.
+
+**Fix**: Replace templates with complete, runnable versions that import current modules (`core.phase_control`, `core.memory_interface`, `core.trace_logger`).
+
+## Implementation Plan (step-by-step)
+
+1. **Centralize phase**
+
+   * Add `REQUIRED_PHASE = 0.4` to `core/phase_control.py`.
+   * Replace per-file constants with imports from `core.phase_control`.
+
+2. **Instrumentation**
+
+   * For **every** tool/reflex: at start and success/failure paths, add `log_memory_event` and `log_trace_event` with `tags`, `content`, and `phase`.
+
+3. **Path & package fixes**
+
+   * Regenerate `configs/dev_file_list.md` (forward slashes, no .pyc) and ensure **no absolute Windows paths** are written to logs.
+   * Rename `boot/__init.py` → `boot/__init__.py`.
+
+4. **Manifest & history regeneration**
+
+   * Rebuild `ironroot_manifest_data.json[all_files]` and `ironroot_file_history_with_dependencies.json[history]` to include **every file** (phase + deps), alpha-sorted.
+
+5. **DB alignment**
+
+   * Standardize **DB path** to `root/will_data.db` across `manifest_db.py`, `reflex_registry_db.py`, tests, and tools.
+   * Either: (a) add `manifest`/`reflex_registry` tables in `sqlite_bootstrap` **or** (b) gate/modernize tests.
+
+6. **Fix tests**
+
+   * Prepend `inject_paths()`; import phase from `core.phase_control`.
+   * Ensure all log calls include `tags`, `content`, and `phase=REQUIRED_PHASE`.
+   * Update DB calls to new signatures **or** use JSON-log assertions if DB features are 0.5+.
+
+7. **Compliance guard**
+
+   * Rewrite `tools/reflex_compliance_guard.py` using AST to detect (a) `REQUIRED_PHASE` import, (b) `get_current_phase()` comparison, (c) `if __name__ == "__main__": run_cli()`.
+   * Treat 0.5 tools as phase-failing (not missing enforcement) at 0.4.
+
+8. **Seeds**
+
+   * Create `/seeds/` mirror of current seeds and constrain loaders to sandbox/test only.
+
+## Milestones
+
+1. **M1 – Phase Core**: Phase centralization + dev file list regeneration + package init fix.
+2. **M2 – Instrumentation**: All tools/reflexes emit both logs; path normalization done.
+3. **M3 – DB & Tests**: DB path unified; tests updated or gated; compliance guard upgraded.
+4. **M4 – Seal 0.4**: Run checklist end-to-end and append timestamps to `build_log.json` and `phase_history.json`.
+
+## How to Validate (repeatable)
+
+Run, in order:
+
+```
+python -m core.sqlite_bootstrap
+python -m tools.check_db_tables
+python -m tests.test_phase_0_3_integrity
+python -m tools.tools_check_utf8_encoding
+python -m reflexes.reflex_core.reflex_trace_ping
+python -m tools.trace_inspector --tag trace_ping
+python -m tools.reflex_compliance_guard
+python -m tools.phase_trace_report
+```
+
+Expect all green at the end of M4.
+
+## Appendix — Concrete Fix List (file-by-file)
+
+* **Add logging (memory+trace) with tags/content/phase**: `tools/trace_inspector.py`, `tools/phase_trace_report.py`, `tools/print_current_phase.py`, `tools/reflex_compliance_guard.py`, `tools/system_check.py`, `tools/verify_log_integrity.py`, `tools/manifest_sync.py`, `tools/manifest_diff.py`, `tools/path_validator.py`, `tools/fix_file_encoding.py`, `tools/tools_check_utf8_encoding.py`, `tools/update_phase_tracking.py`, `tools/tools_check_db_counts.py` (trace), `tools/tools_check_dupes.py` (trace), `reflexes/reflex_core/reflex_loader.py` (phase).
+* **Fix imports & phase usage**: update all to import `REQUIRED_PHASE` from `core.phase_control`.
+* **Inject paths**: add to all tests (incl. `tests/test_phase_0_3_integrity.py`, `tests/test_phase_0_1_db_integrity.py`), `sandbox/sandbox_reflex_tests.py`.
+* **DB path**: change any `will_data.db` (bare) to `root/will_data.db` in `core/manifest_db.py`, `core/reflex_registry_db.py`, tests, and helper tools.
+* **Add tables or gate tests**: align `sqlite_bootstrap` schema with tests **or** update tests to Phase 0.4 scope.
+* **Rename**: `boot/__init.py` → `boot/__init__.py`.
+* **Dev list/manifest/history**: regenerate with forward slashes; include every file; drop `*.pyc`.
+* **Remove `...` placeholders**: in templates and partial scripts (`Canonical_*`, some tests, `tools/manifest_sync.py`).
+
+## Gathering Results
+
+* Re-run the validation sequence. Confirm:
+
+  * `tools.phase_trace_report` shows trace+memory entries at phase 0.4 with `trace_ping` present.
+  * `tools.tools_check_memory_log_calls` reports **no** missing memory/trace calls.
+  * `tools.reflex_compliance_guard` passes; 0.5 tools are flagged only when executed (expected phase failure), not as structural misses.
+
+## Need Professional Help in Developing Your Architecture?
+
+Please contact me at [sammuti.com](https://sammuti.com) :)

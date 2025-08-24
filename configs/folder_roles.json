@@ -1,0 +1,11 @@
+{
+  "boot": "boot_core",
+  "configs": "config_core",
+  "core": "memory_core",
+  "reflexes/reflex_core": "reflex_core",
+  "tools": "cli_tool",
+  "gui": "gui_layer",
+  "sandbox": "sandbox_env",
+  "logs": "log_output",
+  "tests": "test_runner"
+}
