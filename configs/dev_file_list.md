@@ -112,11 +112,15 @@ tests/test_phase_0_5_snapshot_diffs.py
 tests/test_phase_0_5_trace_memory_integrity.py
 tests/test_phase_0_integrity.py
 tools/__init__.py
+tools/auto_reg_probe.py
 tools/check_db_tables.py
 tools/db_snapshot_auditor.py
 tools/fix_file_encoding.py
+tools/git_hooks_precommit.py
 tools/ingest_seeds.py
+tools/ironroot_registrar.py
 tools/manifest_diff.py
+tools/manifest_history_auditor.py
 tools/manifest_sync.py
 tools/path_validator.py
 tools/phase_0_5_sealer.py
@@ -124,6 +128,7 @@ tools/phase_guard_sweep.py
 tools/phase_trace_report.py
 tools/print_current_phase.py
 tools/reflex_compliance_guard.py
+tools/snapshot_db.py
 tools/system_check.py
 tools/test_memory_logger.py
 tools/tools_check_db_counts.py

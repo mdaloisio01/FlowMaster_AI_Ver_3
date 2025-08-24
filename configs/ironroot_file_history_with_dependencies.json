@@ -519,6 +519,10 @@
       "phase": 0.0,
       "dependencies": []
     },
+    "tools/auto_reg_probe.py": {
+      "phase": 0.5,
+      "dependencies": []
+    },
     "tools/check_db_tables.py": {
       "phase": 0.4,
       "dependencies": [
@@ -538,6 +542,10 @@
       "phase": 0.4,
       "dependencies": []
     },
+    "tools/git_hooks_precommit.py": {
+      "phase": 0.5,
+      "dependencies": []
+    },
     "tools/ingest_seeds.py": {
       "phase": 0.4,
       "dependencies": [
@@ -547,8 +555,16 @@
         "core/phase_control.py"
       ]
     },
+    "tools/ironroot_registrar.py": {
+      "phase": 0.5,
+      "dependencies": []
+    },
     "tools/manifest_diff.py": {
       "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/manifest_history_auditor.py": {
+      "phase": 0.5,
       "dependencies": []
     },
     "tools/manifest_sync.py": {
@@ -588,6 +604,10 @@
       "dependencies": [
         "core/phase_control.py"
       ]
+    },
+    "tools/snapshot_db.py": {
+      "phase": 0.5,
+      "dependencies": []
     },
     "tools/system_check.py": {
       "phase": 0.4,
