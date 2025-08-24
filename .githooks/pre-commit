@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -euo pipefail
+root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+cd "$root"
+
+run_py() {
+  if command -v py >/dev/null 2>&1; then py -m tools.git_hooks_precommit; return $?; fi
+  if command -v python >/dev/null 2>&1; then python -m tools.git_hooks_precommit; return $?; fi
+  if command -v python3 >/dev/null 2>&1; then python3 -m tools.git_hooks_precommit; return $?; fi
+  echo "IRONROOT VIOLATION ? Python launcher not found; cannot run tools.git_hooks_precommit." >&2
+  exit 1
+}
+run_py
