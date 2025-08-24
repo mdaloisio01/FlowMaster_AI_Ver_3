@@ -1,0 +1,689 @@
+{
+  "history": {
+    "__init__.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "boot/__init__.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "boot/boot_exception_logger.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/memory_interface.py",
+        "core/trace_logger.py",
+        "core/phase_control.py"
+      ]
+    },
+    "boot/boot_path_initializer.py": {
+      "phase": 0.0,
+      "dependencies": [
+        "configs/ironroot_manifest_data.json",
+        "configs/ironroot_file_history_with_dependencies.json",
+        "boot/boot_exception_logger.py"
+      ]
+    },
+    "boot/boot_phase_loader.py": {
+      "phase": 0.0,
+      "dependencies": [
+        "core/phase_control.py"
+      ]
+    },
+    "boot/boot_trace_logger.py": {
+      "phase": 0.0,
+      "dependencies": [
+        "core/trace_logger.py",
+        "core/memory_interface.py"
+      ]
+    },
+    "boot/README.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "Canonical_CLI_Tool_Template.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "Canonical_Reflex_Template.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/__init__.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/build_log.json": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/cron_schedule.json": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/dev_bot_bootstrap.md": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/dev_bot_instructions.md": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/dev_file_list.md": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/dev_file_list_template.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/dev_notes.md": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/file_safe_imports.json": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/FlowMaster_OG_dev_file.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/folder_roles.json": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/ironroot_file_history_with_dependencies.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/ironroot_history_template.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/ironroot_manifest_data.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/ironroot_manifest_template.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/Phase_02_DevBot_Completion_Debrief.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/Phase_02_file_list.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/Phase_03_file_list.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/Phase_04_file_list.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "configs/phase_history.json": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "configs/phase_stabilization_templates.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "core/__init__.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "core/manifest_db.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/sqlite_bootstrap.py"
+      ]
+    },
+    "core/memory_interface.py": {
+      "phase": 0.0,
+      "dependencies": [
+        "core/trace_logger.py"
+      ]
+    },
+    "core/memory_log_db.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/sqlite_bootstrap.py"
+      ]
+    },
+    "core/phase_control.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "core/reflex_registry_db.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/sqlite_bootstrap.py"
+      ]
+    },
+    "core/snapshot_manager.py": {
+      "phase": 0.5,
+      "dependencies": [
+        "core/sqlite_bootstrap.py"
+      ]
+    },
+    "core/sqlite_bootstrap.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "core/trace_logger.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "logs/boot_trace_log.json": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "logs/reflex_trace_log.json": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "logs/will_memory_log.json": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "reflexes/reflex_core/__init__.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "reflexes/reflex_core/reflex_loader.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/memory_interface.py",
+        "core/trace_logger.py",
+        "core/phase_control.py"
+      ]
+    },
+    "reflexes/reflex_core/reflex_self_test_runner.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/phase_control.py",
+        "core/memory_interface.py",
+        "core/trace_logger.py"
+      ]
+    },
+    "reflexes/reflex_core/reflex_table_tick.py": {
+      "phase": 0.5,
+      "dependencies": [
+        "core/phase_control.py",
+        "core/sqlite_bootstrap.py",
+        "core/memory_interface.py",
+        "core/trace_logger.py"
+      ]
+    },
+    "reflexes/reflex_core/reflex_trace_ping.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/phase_control.py",
+        "core/memory_interface.py",
+        "core/trace_logger.py"
+      ]
+    },
+    "root/test.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "sandbox/__init__.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "sandbox/sandbox_reflex_tests.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "boot/boot_path_initializer.py",
+        "seeds/reflex_manifest.json"
+      ]
+    },
+    "seeds/__init__.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/branding_tone_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/business_communication_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/client_profile_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/ironroot_mission_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/market_research_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/monetization_strategy_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/phase_map_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/project_index_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/reflex_catalog_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/business/usage_policy_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/core/seed_ironroot_summary.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/core/seed_ironroot_summary.txt": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/core/seed_operator_preferences.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/core/seed_origin_story.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/api_surface_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/architecture_principles_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/cli_templates_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/ironroot_law_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/logging_conventions_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/memory_schema_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/module_layout_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/phase_gate_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/reflex_compliance_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/testing_strategy_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/trace_pipeline_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/engineering/utf8_policy_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/agent_personas_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/automation_loops_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/cron_jobs_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/data_backup_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/debug_macros_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/error_taxonomy_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/experiment_toggles_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/feature_flags_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/file_sentinel_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/goal_templates_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/maintenance_playbooks_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/metric_events_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/ops_runbooks_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/persona_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/proxy_rules_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/task_template_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/optional/time_awareness_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/reflex_manifest.json": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/security/api_key_handling_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/security/autonomy_limits_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/security/data_retention_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/security/log_redaction_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/security/privacy_guard_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/security/reflex_sandbox_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/security/safety_protocol_seed.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/seed_identity.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/seed_ironroot_summary.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/seed_operator_preferences.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/seed_origin_story.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "seeds/startup_manifest.yaml": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tests/__init__.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "tests/test_phase_0_1_db_integrity.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/sqlite_bootstrap.py"
+      ]
+    },
+    "tests/test_phase_0_2_db_lifecycle.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/sqlite_bootstrap.py"
+      ]
+    },
+    "tests/test_phase_0_3_integrity.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/phase_control.py",
+        "core/memory_interface.py",
+        "core/trace_logger.py"
+      ]
+    },
+    "tests/test_phase_0_5_snapshot_diffs.py": {
+      "phase": 0.5,
+      "dependencies": [
+        "core/phase_control.py",
+        "core/sqlite_bootstrap.py",
+        "tools/trace_memory_snapshot.py"
+      ]
+    },
+    "tests/test_phase_0_5_trace_memory_integrity.py": {
+      "phase": 0.5,
+      "dependencies": [
+        "core/phase_control.py",
+        "tools/trace_memory_snapshot.py",
+        "tools/trace_memory_crosscheck.py"
+      ]
+    },
+    "tests/test_phase_0_integrity.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/__init__.py": {
+      "phase": 0.0,
+      "dependencies": []
+    },
+    "tools/check_db_tables.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/sqlite_bootstrap.py"
+      ]
+    },
+    "tools/db_snapshot_auditor.py": {
+      "phase": 0.5,
+      "dependencies": [
+        "core/phase_control.py",
+        "core/sqlite_bootstrap.py",
+        "core/memory_interface.py",
+        "core/trace_logger.py"
+      ]
+    },
+    "tools/fix_file_encoding.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/ingest_seeds.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "seeds",
+        "core/memory_interface.py",
+        "core/trace_logger.py",
+        "core/phase_control.py"
+      ]
+    },
+    "tools/manifest_diff.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/manifest_sync.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "configs/dev_file_list.md"
+      ]
+    },
+    "tools/path_validator.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "configs/dev_file_list.md"
+      ]
+    },
+    "tools/phase_0_5_sealer.py": {
+      "phase": 0.5,
+      "dependencies": []
+    },
+    "tools/phase_guard_sweep.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/phase_trace_report.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/trace_logger.py"
+      ]
+    },
+    "tools/print_current_phase.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/phase_control.py"
+      ]
+    },
+    "tools/reflex_compliance_guard.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/phase_control.py"
+      ]
+    },
+    "tools/system_check.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/test_memory_logger.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/memory_interface.py",
+        "core/trace_logger.py"
+      ]
+    },
+    "tools/tools_check_db_counts.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/sqlite_bootstrap.py"
+      ]
+    },
+    "tools/tools_check_dupes.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/tools_check_memory_log_calls.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/memory_interface.py"
+      ]
+    },
+    "tools/tools_check_utf8_encoding.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/trace_inspector.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/trace_logger.py"
+      ]
+    },
+    "tools/trace_memory_alignment.py": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "tools/trace_memory_crosscheck.py": {
+      "phase": 0.5,
+      "dependencies": [
+        "core/phase_control.py",
+        "core/sqlite_bootstrap.py",
+        "core/memory_interface.py",
+        "core/trace_logger.py"
+      ]
+    },
+    "tools/trace_memory_snapshot.py": {
+      "phase": 0.5,
+      "dependencies": [
+        "core/phase_control.py",
+        "core/sqlite_bootstrap.py",
+        "core/memory_interface.py",
+        "core/trace_logger.py",
+        "core/snapshot_manager.py"
+      ]
+    },
+    "tools/update_phase_tracking.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "configs/phase_history.json",
+        "configs/build_log.json"
+      ]
+    },
+    "tools/verify_log_integrity.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "logs/will_memory_log.json",
+        "logs/reflex_trace_log.json"
+      ]
+    },
+    "tools/will_cli.py": {
+      "phase": 0.4,
+      "dependencies": [
+        "core/phase_control.py"
+      ]
+    },
+    "will_commands.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "will_commands_reference.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "will_commands_samples.md": {
+      "phase": 0.4,
+      "dependencies": []
+    },
+    "will_data.db": {
+      "phase": 0.4,
+      "dependencies": []
+    }
+  }
+}
