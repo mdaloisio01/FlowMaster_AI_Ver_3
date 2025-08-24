@@ -117,6 +117,7 @@ tools/check_db_tables.py
 tools/db_snapshot_auditor.py
 tools/fix_file_encoding.py
 tools/git_hooks_precommit.py
+tools/hello_ironroot_tool.py
 tools/ingest_seeds.py
 tools/ironroot_registrar.py
 tools/manifest_diff.py

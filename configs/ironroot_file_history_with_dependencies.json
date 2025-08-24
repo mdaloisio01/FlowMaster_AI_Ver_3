@@ -546,6 +546,10 @@
       "phase": 0.5,
       "dependencies": []
     },
+    "tools/hello_ironroot_tool.py": {
+      "phase": 0.5,
+      "dependencies": []
+    },
     "tools/ingest_seeds.py": {
       "phase": 0.4,
       "dependencies": [
