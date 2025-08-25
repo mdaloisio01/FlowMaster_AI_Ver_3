@@ -4,6 +4,7 @@ boot/boot_exception_logger.py
 boot/boot_path_initializer.py
 boot/boot_phase_loader.py
 boot/boot_trace_logger.py
+boot/README.md
 Canonical_CLI_Tool_Template.py
 Canonical_Reflex_Template.py
 configs/__init__.py
