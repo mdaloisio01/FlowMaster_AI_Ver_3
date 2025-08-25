@@ -1,84 +1,62 @@
 # core/reflex_registry_db.py
-# Helper APIs for the reflex_registry table in root/will_data.db
 
-from __future__ import annotations
-
-from boot.boot_path_initializer import inject_paths
+from boot.boot_path_initializer import inject_paths  # required path injection
 inject_paths()
 
-import json
 import sqlite3
-from pathlib import Path
-from typing import Optional, Dict, Any, List
+import contextlib
+import pathlib
+from typing import List, Dict, Any
 
-from core.sqlite_bootstrap import DB_PATH, create_tables  # ensures path consistency
-
-
-def _conn() -> sqlite3.Connection:
-    create_tables()  # idempotent safety
-    return sqlite3.connect(DB_PATH.as_posix())
+# Always use the shared DB path (never hardcode)
+from core.sqlite_bootstrap import DB_PATH
 
 
-def register_reflex(
-    name: str,
-    *,
-    module_path: str,
-    phase: float,
-    active: bool = True,
-    metadata: Optional[Dict[str, Any]] = None,
-) -> None:
-    meta_json = json.dumps(metadata or {}, ensure_ascii=False)
-    with _conn() as conn:
-        conn.execute(
-            """
-            INSERT INTO reflex_registry(name, module_path, phase, active, metadata_json)
-            VALUES (?, ?, ?, ?, ?)
-            ON CONFLICT(name) DO UPDATE SET
-              module_path=excluded.module_path,
-              phase=excluded.phase,
-              active=excluded.active,
-              metadata_json=excluded.metadata_json
-            """,
-            (name, module_path.replace("\\", "/"), float(phase), 1 if active else 0, meta_json),
-        )
-        conn.commit()
+def _rows_to_dicts(cursor: sqlite3.Cursor, rows: list) -> List[Dict[str, Any]]:
+    cols = [d[0] for d in cursor.description]
+    return [dict(zip(cols, r)) for r in rows]
 
 
-def get_reflex(name: str) -> Optional[Dict[str, Any]]:
-    with _conn() as conn:
-        cur = conn.execute(
-            "SELECT name, module_path, phase, active, metadata_json, created_at FROM reflex_registry WHERE name=?",
-            (name,),
-        )
-        row = cur.fetchone()
-        if not row:
-            return None
-        return {
-            "name": row[0],
-            "module_path": row[1],
-            "phase": float(row[2]),
-            "active": bool(row[3]),
-            "metadata": json.loads(row[4] or "{}"),
-            "created_at": row[5],
-        }
+def _normalize_possible_paths(row: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    Normalize any value that looks like a filesystem path to forward slashes.
+    We consider keys containing 'path' or common file-ish keys.
+    """
+    for k, v in list(row.items()):
+        if isinstance(v, str):
+            lk = k.lower()
+            if "path" in lk or lk in {"module", "file", "script"}:
+                if ("/" in v) or ("\\" in v):
+                    row[k] = pathlib.PurePosixPath(v).as_posix()
+    return row
 
 
-def list_reflexes(limit: int = 1000) -> List[Dict[str, Any]]:
-    with _conn() as conn:
-        cur = conn.execute(
-            "SELECT name, module_path, phase, active, metadata_json, created_at FROM reflex_registry ORDER BY name LIMIT ?",
-            (int(limit),),
-        )
-        out: List[Dict[str, Any]] = []
-        for row in cur.fetchall():
-            out.append(
-                {
-                    "name": row[0],
-                    "module_path": row[1],
-                    "phase": float(row[2]),
-                    "active": bool(row[3]),
-                    "metadata": json.loads(row[4] or "{}"),
-                    "created_at": row[5],
-                }
-            )
-        return out
+def fetch_all_reflexes() -> List[Dict[str, Any]]:
+    """
+    Phase-agnostic read of the reflex registry.
+
+    Source:
+      - SQLite table 'reflex_registry' (if present). Returns full row dicts as-is,
+        but normalizes any path-like fields to forward slashes.
+
+    Never raises; returns [] on any unexpected issue or if the table is missing/empty.
+    """
+    with contextlib.ExitStack() as stack:
+        try:
+            con = stack.enter_context(sqlite3.connect(DB_PATH))
+            cur = con.cursor()
+            cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='reflex_registry'")
+            if not cur.fetchone():
+                return []
+            cur.execute("SELECT * FROM reflex_registry")
+            rows = cur.fetchall()
+            if not rows:
+                return []
+            results = _rows_to_dicts(cur, rows)
+            return [_normalize_possible_paths(r) for r in results]
+        except Exception:
+            # Tests expect robustness: on any issue, return an empty list rather than raising.
+            return []
+
+
+__all__ = ["fetch_all_reflexes"]

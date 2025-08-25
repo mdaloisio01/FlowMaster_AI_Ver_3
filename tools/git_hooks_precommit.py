@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # tools/git_hooks_precommit.py
 # IronRoot Git pre-commit runner (enhanced):
 # - Phase lock (ensure_phase)

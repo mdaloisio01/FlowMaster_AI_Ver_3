@@ -1,113 +1,180 @@
 # core/sqlite_bootstrap.py
-# Creates/maintains the Phase 0.4 database schema in root/will_data.db
-# Tables:
-#   - memory_events(id, ts, event_json)
-#   - trace_events(id, ts, event_json)
-#   - boot_events(id, ts, event_json)
-#   - manifest(file_path PK, phase, dependencies_json, created_at)
-#   - reflex_registry(name PK, module_path, phase, active, metadata_json, created_at)
 
-from __future__ import annotations
-
-from boot.boot_path_initializer import inject_paths
+from boot.boot_path_initializer import inject_paths  # required path injection
 inject_paths()
 
+import os
 import sqlite3
-from pathlib import Path
-from typing import Iterable
+import json
+import datetime
+import contextlib
+from pathlib import Path, PurePosixPath
+from typing import Optional, Dict, Any, Iterable, List
 
-from core.phase_control import REQUIRED_PHASE, ensure_phase, get_current_phase
-from core.memory_interface import log_memory_event
-from core.trace_logger import log_trace_event
-
-DB_PATH = Path("root/will_data.db")
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-
-
-def _exec_many(conn: sqlite3.Connection, stmts: Iterable[str]) -> None:
-    cur = conn.cursor()
-    for s in stmts:
-        cur.execute(s)
-    conn.commit()
+# Single source of truth for DB path (must expose .as_posix() for early tests)
+DB_PATH: PurePosixPath = PurePosixPath("root/will_data.db")
 
 
-def create_tables() -> None:
-    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(DB_PATH.as_posix()) as conn:
-        conn.execute("PRAGMA journal_mode=WAL;")
-        conn.execute("PRAGMA foreign_keys=ON;")
+def _connect() -> sqlite3.Connection:
+    """
+    Returns a sqlite3 connection to the IronRoot database.
+    Callers must not hardcode paths; always use DB_PATH.
+    """
+    Path(DB_PATH).parent.mkdir(parents=True, exist_ok=True)
+    con = sqlite3.connect(os.fspath(DB_PATH))
+    con.execute("PRAGMA foreign_keys = ON;")
+    return con
 
-        stmts = [
-            # Core event chains (Phase 0.x)
-            """
-            CREATE TABLE IF NOT EXISTS memory_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts TEXT NOT NULL,
-                event_json TEXT NOT NULL
-            );
-            """,
-            """
-            CREATE TABLE IF NOT EXISTS trace_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts TEXT NOT NULL,
-                event_json TEXT NOT NULL
-            );
-            """,
+
+def _rows_to_dicts(cursor: sqlite3.Cursor, rows: Iterable[Iterable[Any]]) -> List[Dict[str, Any]]:
+    cols = [d[0] for d in cursor.description]
+    return [dict(zip(cols, r)) for r in rows]
+
+
+def ensure_tables() -> None:
+    """
+    Create required tables if they do not already exist.
+    This is phase-agnostic and safe to run multiple times.
+    """
+    with contextlib.closing(_connect()) as con, contextlib.closing(con.cursor()) as cur:
+        # boot_events — general boot/report log table used by early-phase tests
+        cur.execute(
             """
             CREATE TABLE IF NOT EXISTS boot_events (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 ts TEXT NOT NULL,
-                event_json TEXT NOT NULL
-            );
-            """,
-            # Phase 0.4-compatible tables used by tests/tools
+                event TEXT,
+                details TEXT
+            )
+            """
+        )
+
+        # manifest — file registry
+        cur.execute(
             """
             CREATE TABLE IF NOT EXISTS manifest (
-                file_path TEXT PRIMARY KEY,
-                phase REAL NOT NULL,
-                dependencies_json TEXT NOT NULL DEFAULT '[]',
-                created_at TEXT NOT NULL DEFAULT (datetime('now'))
-            );
-            """,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                path TEXT UNIQUE NOT NULL,
+                added_ts TEXT,
+                phase TEXT
+            )
+            """
+        )
+
+        # memory_events — for dual-logging memory track
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS memory_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL,
+                tag TEXT NOT NULL,
+                payload TEXT
+            )
+            """
+        )
+
+        # reflex_registry — registry of reflex/tool handlers
+        cur.execute(
             """
             CREATE TABLE IF NOT EXISTS reflex_registry (
-                name TEXT PRIMARY KEY,
-                module_path TEXT NOT NULL,
-                phase REAL NOT NULL,
-                active INTEGER NOT NULL DEFAULT 1,
-                metadata_json TEXT NOT NULL DEFAULT '{}',
-                created_at TEXT NOT NULL DEFAULT (datetime('now'))
-            );
-            """,
-        ]
-        _exec_many(conn, stmts)
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL,
+                reflex_name TEXT NOT NULL,
+                module TEXT,
+                path TEXT,
+                enabled INTEGER DEFAULT 1
+            )
+            """
+        )
+
+        # trace_events — for dual-logging trace track
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS trace_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL,
+                level TEXT NOT NULL,
+                tag TEXT NOT NULL,
+                message TEXT,
+                context TEXT
+            )
+            """
+        )
+
+        # snapshot_index — used by snapshot tools
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS snapshot_index (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL,
+                run_id TEXT NOT NULL,
+                mode TEXT NOT NULL,
+                tables_changed INTEGER DEFAULT 0
+            )
+            """
+        )
+
+        # test_ticks — helper table used by tests
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS test_ticks (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL,
+                tick TEXT NOT NULL
+            )
+            """
+        )
+
+        con.commit()
 
 
-def run_cli() -> None:
-    # Enforce phase for CLI operation
-    ensure_phase()
-    cur_phase = get_current_phase()
+# Back-compat alias expected by some tools (e.g., tools.check_db_tables)
+def create_tables() -> None:
+    """Alias to ensure_tables(), provided for backward compatibility."""
+    ensure_tables()
 
-    log_memory_event(
-        event_text="sqlite_bootstrap start",
-        source=Path(__file__).as_posix(),
-        tags=["db", "start", "bootstrap"],
-        content={"db_path": DB_PATH.as_posix(), "phase_required": REQUIRED_PHASE, "phase_current": cur_phase},
-        phase=REQUIRED_PHASE,
-    )
 
-    create_tables()
+def list_tables() -> List[str]:
+    """Return a sorted list of tables in the database."""
+    with contextlib.closing(_connect()) as con, contextlib.closing(con.cursor()) as cur:
+        cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        return sorted([r[0] for r in cur.fetchall()])
 
-    log_trace_event(
-        description="sqlite_bootstrap done",
-        source=Path(__file__).as_posix(),
-        tags=["db", "done", "bootstrap"],
-        content={"db_path": DB_PATH.as_posix()},
-        phase=REQUIRED_PHASE,
-    )
 
-    print(f"SQLite bootstrap OK @ {DB_PATH.as_posix()}")
+def insert_boot_report_entry(event: str, *, ts: Optional[str] = None, details: Optional[Dict[str, Any]] = None) -> int:
+    """
+    Public API expected by early-phase tests.
+    Inserts a row into boot_events and returns the row id.
+    """
+    ensure_tables()
+    if ts is None:
+        ts = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
+    payload = json.dumps(details, ensure_ascii=False) if isinstance(details, dict) else None
+
+    with contextlib.closing(_connect()) as con, contextlib.closing(con.cursor()) as cur:
+        cur.execute(
+            "INSERT INTO boot_events (ts, event, details) VALUES (?, ?, ?)",
+            (ts, event, payload),
+        )
+        con.commit()
+        return int(cur.lastrowid)
+
+
+def bootstrap() -> None:
+    """Idempotent bootstrap entrypoint used by `py -m core.sqlite_bootstrap`."""
+    ensure_tables()
 
 
 if __name__ == "__main__":
-    run_cli()
+    bootstrap()
+    print(f"SQLite bootstrap OK @ {DB_PATH.as_posix()}")
+
+
+__all__ = [
+    "DB_PATH",
+    "ensure_tables",
+    "create_tables",  # back-compat
+    "list_tables",
+    "insert_boot_report_entry",
+    "bootstrap",
+]

@@ -1,64 +1,84 @@
 # core/phase_control.py
-# Single source of truth for phase gating.
-# All tools/reflexes/tests must import REQUIRED_PHASE and get_current_phase from here.
-# Paths use forward slashes; all JSON I/O uses UTF-8.
 
-from __future__ import annotations
+from boot.boot_path_initializer import inject_paths  # required path injection
+inject_paths()
 
-import json
 import os
+import json
 from pathlib import Path
-from typing import Any, Optional
+from typing import Optional, Any
 
-# ---- Phase constant (authoritative) ----
-# Phase 0.4 – Trace Validation & Reflex Compliance
-REQUIRED_PHASE: float = 0.4
+# Phase lock — update as you progress through phases
+# After sealing 0.5 -> 0.6, REQUIRED_PHASE must be 0.6
+REQUIRED_PHASE: float = 0.6
 
-# Optional: file that may record the latest sealed phase.
-_PHASE_HISTORY_FILE = Path("configs/phase_history.json")
+
+def _parse_phase(v: Any) -> Optional[float]:
+    """Best-effort parse of phase values (accepts int/float/str)."""
+    if v is None:
+        return None
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
 
 
 def _read_phase_from_env() -> Optional[float]:
-    """Allow overriding the runtime phase via env var (e.g., in CI)."""
-    val = os.getenv("WILL_CURRENT_PHASE") or os.getenv("FLOWMASTER_CURRENT_PHASE")
-    if not val:
+    """
+    Highest priority: environment overrides.
+    Recognized:
+      - WILL_CURRENT_PHASE
+      - FLOWMASTER_CURRENT_PHASE
+    """
+    for key in ("WILL_CURRENT_PHASE", "FLOWMASTER_CURRENT_PHASE"):
+        val = os.environ.get(key)
+        p = _parse_phase(val)
+        if p is not None:
+            return p
+    return None
+
+
+def _read_phase_from_manifest() -> Optional[float]:
+    """
+    Prefer the manifest's explicit current phase if present:
+      configs/ironroot_manifest_data.json -> {"current_phase": 0.6, ...}
+    Falls back to a top-level "phase" if that convention is used.
+    """
+    p = Path("configs/ironroot_manifest_data.json")
+    if not p.exists():
         return None
     try:
-        return float(val)
+        data = json.loads(p.read_text(encoding="utf-8"))
     except Exception:
         return None
 
+    for key in ("current_phase", "phase"):
+        ph = _parse_phase(data.get(key))
+        if ph is not None:
+            return ph
+    return None
 
-def _read_phase_from_file() -> Optional[float]:
+
+def _read_phase_from_history() -> Optional[float]:
     """
-    Try several reasonable shapes for configs/phase_history.json:
-      1) {"current_phase": 0.4}
-      2) {"history": [{"phase": 0.1, ...}, {"phase": 0.4, ...}]}
-      3) [{"phase": 0.1, ...}, {"phase": 0.4, ...}]
-    On any error, return None (caller will fall back to REQUIRED_PHASE).
+    Next priority: the tail of configs/phase_history.json["history"].
+    We scan from the end to find the most recent numeric 'phase'.
+    Entries may look like:
+      {"phase": 0.4, "action": "sealed", "timestamp": "..."}
+      {"phase": "0.5", "ts": "..."}
+      {"phase": 0.6, "ts": "..."}
     """
+    p = Path("configs/phase_history.json")
+    if not p.exists():
+        return None
     try:
-        if not _PHASE_HISTORY_FILE.exists():
-            return None
-        data: Any = json.loads(_PHASE_HISTORY_FILE.read_text(encoding="utf-8"))
-
-        # shape 1
-        if isinstance(data, dict) and "current_phase" in data:
-            return float(data["current_phase"])
-
-        # shape 2
-        if isinstance(data, dict) and "history" in data and isinstance(data["history"], list):
-            hist = data["history"]
-            if hist:
-                last = hist[-1]
-                if isinstance(last, dict) and "phase" in last:
-                    return float(last["phase"])
-
-        # shape 3
-        if isinstance(data, list) and data:
-            last = data[-1]
-            if isinstance(last, dict) and "phase" in last:
-                return float(last["phase"])
+        data = json.loads(p.read_text(encoding="utf-8"))
+        hist = data.get("history", []) or []
+        # scan from newest to oldest for the first numeric phase
+        for item in reversed(hist):
+            ph = _parse_phase(item.get("phase"))
+            if ph is not None:
+                return ph
     except Exception:
         return None
     return None
@@ -67,12 +87,19 @@ def _read_phase_from_file() -> Optional[float]:
 def get_current_phase() -> float:
     """
     Current runtime phase.
+
     Order of precedence:
       1) Env var WILL_CURRENT_PHASE / FLOWMASTER_CURRENT_PHASE
-      2) configs/phase_history.json
-      3) REQUIRED_PHASE (fallback)
+      2) configs/ironroot_manifest_data.json -> current_phase (or phase)
+      3) configs/phase_history.json -> last numeric 'phase'
+      4) REQUIRED_PHASE (fallback)
     """
-    return _read_phase_from_env() or _read_phase_from_file() or REQUIRED_PHASE
+    return (
+        _read_phase_from_env()
+        or _read_phase_from_manifest()
+        or _read_phase_from_history()
+        or REQUIRED_PHASE
+    )
 
 
 def ensure_phase(required: Optional[float] = None) -> None:
@@ -89,4 +116,4 @@ def ensure_phase(required: Optional[float] = None) -> None:
         )
 
 
-__all__ = ("REQUIRED_PHASE", "get_current_phase", "ensure_phase")
+__all__ = ["REQUIRED_PHASE", "get_current_phase", "ensure_phase"]
