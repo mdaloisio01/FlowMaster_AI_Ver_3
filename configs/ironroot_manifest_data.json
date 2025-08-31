@@ -1,5 +1,5 @@
 {
-  "current_phase": 0.6,
+  "current_phase": 0.7,
   "manifest": {
     "core": [
       "core/manifest_db.py",
