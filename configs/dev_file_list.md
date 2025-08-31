@@ -149,3 +149,30 @@ will_commands.md
 will_commands_reference.md
 will_commands_samples.md
 will_data.db
+
+<!-- auto:ironroot_registrar -->
+- tests/test_phase_0_6_api_smoke.py
+
+<!-- auto:ironroot_registrar -->
+- tests/test_phase_0_6_auto_migration_roundtrip.py
+
+<!-- auto:ironroot_registrar -->
+- tests/test_phase_0_6_preseal_end_to_end.py
+
+<!-- auto:ironroot_registrar -->
+- tests/test_phase_0_6_schema_contract.py
+
+<!-- auto:ironroot_registrar -->
+- tools/api_smoke_suite.py
+
+<!-- auto:ironroot_registrar -->
+- tools/db_schema_contract.py
+
+<!-- auto:ironroot_registrar -->
+- tools/db_schema_migrate.py
+
+<!-- auto:ironroot_registrar -->
+- tools/phase_0_6_sealer.py
+
+<!-- auto:ironroot_registrar -->
+- tools/run_all_phase_tests.py
