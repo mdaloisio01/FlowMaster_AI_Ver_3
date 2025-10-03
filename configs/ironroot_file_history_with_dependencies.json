@@ -131,6 +131,220 @@
       "deps": [],
       "ts": "2025-08-31T04:55:45Z",
       "note": "auto-registered"
+    },
+    "core/__init__.py": {},
+    "core/memory/will_memory_engine.py": {},
+    "core/memory_interface.py": {},
+    "core/memory_log_db.py": {},
+    "core/phase_control.py": {},
+    "core/sqlite_bootstrap.py": {},
+    "core/trace_logger.py": {},
+    "reflexes/reflex_core/__init__.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-08-31T06:34:52Z"
+    },
+    "reflexes/reflex_core/reflex_loader.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-08-31T06:34:52Z"
+    },
+    "reflexes/reflex_core/reflex_self_test_runner.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-08-31T06:34:52Z"
+    },
+    "tests/__init__.py": {},
+    "tests/test_phase_0_1_db_integrity.py": {},
+    "tests/test_phase_0_2_db_lifecycle.py": {},
+    "tests/test_phase_0_2_integrity.py": {},
+    "tests/test_phase_0_3_integrity.py": {},
+    "tests/test_phase_0_integrity.py": {},
+    "tools/check_db_tables.py": {},
+    "tools/file_history_backfill_all.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:39Z"
+    },
+    "tools/fix_file_encoding.py": {},
+    "tools/git_hooks_precommit.py": {},
+    "tools/hello_ironroot_tool.py": {},
+    "tools/ingest_seeds.py": {},
+    "tools/manifest_diff.py": {},
+    "tools/manifest_sync.py": {},
+    "tools/path_validator.py": {},
+    "tools/phase_guard_sweep.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:39Z"
+    },
+    "tools/phase_trace_report.py": {},
+    "tools/print_current_phase.py": {},
+    "tools/reflex_compliance_guard.py": {},
+    "tools/reflex_coverage_report.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:39Z"
+    },
+    "tools/snapshot_db.py": {},
+    "tools/system_check.py": {},
+    "tools/test_memory_logger.py": {},
+    "tools/tools_check_db_counts.py": {},
+    "tools/tools_check_dupes.py": {},
+    "tools/tools_check_memory_log_calls.py": {},
+    "tools/tools_check_utf8_encoding.py": {},
+    "tools/trace_inspector.py": {},
+    "tools/trace_memory_alignment.py": {},
+    "tools/update_phase_tracking.py": {},
+    "tools/verify_log_integrity.py": {},
+    "tools/will_cli.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:40Z"
+    },
+    "current_phase": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-08-31T06:33:54Z",
+      "note": "auto-registered"
+    },
+    "files": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-08-31T06:33:54Z",
+      "note": "auto-registered"
+    },
+    "manifest": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-08-31T06:33:54Z",
+      "note": "auto-registered"
+    },
+    "phase_history": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-08-31T06:33:54Z",
+      "note": "auto-registered"
+    },
+    "tools/ask_server.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:37Z",
+      "note": "auto-registered"
+    },
+    "tools/ask_server_mirror.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:37Z",
+      "note": "auto-registered"
+    },
+    "tools/ask_will.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:37Z",
+      "note": "auto-registered"
+    },
+    "tools/audit/will_inventory_probe.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:37Z",
+      "note": "auto-registered"
+    },
+    "tools/auto_phase_guard_fix.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:37Z",
+      "note": "auto-registered"
+    },
+    "tools/autosave/__init__.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:37Z",
+      "note": "auto-registered"
+    },
+    "tools/autosave/autosave_helper.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:37Z",
+      "note": "auto-registered"
+    },
+    "tools/autosave/local_listener.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:38Z",
+      "note": "auto-registered"
+    },
+    "tools/autosave/userscripts/__init__.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:38Z",
+      "note": "auto-registered"
+    },
+    "tools/chunker/chunker.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:38Z",
+      "note": "auto-registered"
+    },
+    "tools/chunker/chunker_cli.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:38Z",
+      "note": "auto-registered"
+    },
+    "tools/chunker/inspect_chunk_db.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:38Z",
+      "note": "auto-registered"
+    },
+    "tools/chunker/migrate_backfill_chunk_hashes.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:38Z",
+      "note": "auto-registered"
+    },
+    "tools/chunker/summarize_and_index_reflex.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:38Z",
+      "note": "auto-registered"
+    },
+    "tools/model_router.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:39Z",
+      "note": "auto-registered"
+    },
+    "tools/reflex_registry_scanner.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:39Z",
+      "note": "auto-registered"
+    },
+    "tools/reposition_phase_guard.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:39Z",
+      "note": "auto-registered"
+    },
+    "tools/retriever.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:39Z",
+      "note": "auto-registered"
+    },
+    "tools/will_browser.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:40Z",
+      "note": "auto-registered"
+    },
+    "tools/will_search_panel.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-03T23:37:40Z",
+      "note": "auto-registered"
     }
   },
   "files": {
