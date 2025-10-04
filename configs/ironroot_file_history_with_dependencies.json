@@ -345,6 +345,12 @@
       "deps": [],
       "ts": "2025-10-03T23:37:40Z",
       "note": "auto-registered"
+    },
+    "tools/artifact_emitter.py": {
+      "phase": "0.7",
+      "deps": [],
+      "ts": "2025-10-04T01:27:14Z",
+      "note": "auto-registered"
     }
   },
   "files": {

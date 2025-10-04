@@ -245,3 +245,6 @@ will_data.db
 
 <!-- auto:ironroot_registrar -->
 - tools/will_search_panel.py
+
+<!-- auto:ironroot_registrar -->
+- tools/artifact_emitter.py

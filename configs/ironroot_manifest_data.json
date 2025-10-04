@@ -421,6 +421,7 @@
     "tests/test_phase_0_integrity.py",
     "tools/__init__.py",
     "tools/api_smoke_suite.py",
+    "tools/artifact_emitter.py",
     "tools/ask_server.py",
     "tools/ask_server_mirror.py",
     "tools/ask_will.py",
