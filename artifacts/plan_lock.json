@@ -1,0 +1,10 @@
+{
+"seed_files": [
+{"path": "seeds/Soft Phase Guard seed file.md", "sha256": "TO-COMPUTE"},
+{"path": "configs/ironroot_manifest_data.json", "sha256": "TO-COMPUTE"}
+],
+"seed_sha256": "TO-COMPUTE",
+"generated_at": "2025-10-03T00:00:00Z",
+"plan_hash": "TO-COMPUTE",
+"indexer_version": "0.8.0"
+}

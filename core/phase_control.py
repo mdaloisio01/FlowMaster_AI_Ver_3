@@ -1,4 +1,4 @@
-# core/phase_control.py
+﻿# core/phase_control.py
 
 from boot.boot_path_initializer import inject_paths  # required path injection
 inject_paths()
@@ -9,8 +9,8 @@ from pathlib import Path
 from typing import Optional, Any
 
 # Phase lock — update as you progress through phases
-# After sealing 0.5 -> 0.6, REQUIRED_PHASE must be 0.6
-REQUIRED_PHASE: float = 0.6
+# After sealing 0.6 -> 0.7, REQUIRED_PHASE must be 0.7
+REQUIRED_PHASE: float = 0.7
 
 
 def _parse_phase(v: Any) -> Optional[float]:
@@ -41,7 +41,7 @@ def _read_phase_from_env() -> Optional[float]:
 def _read_phase_from_manifest() -> Optional[float]:
     """
     Prefer the manifest's explicit current phase if present:
-      configs/ironroot_manifest_data.json -> {"current_phase": 0.6, ...}
+      configs/ironroot_manifest_data.json -> {"current_phase": 0.7, ...}
     Falls back to a top-level "phase" if that convention is used.
     """
     p = Path("configs/ironroot_manifest_data.json")
@@ -64,9 +64,8 @@ def _read_phase_from_history() -> Optional[float]:
     Next priority: the tail of configs/phase_history.json["history"].
     We scan from the end to find the most recent numeric 'phase'.
     Entries may look like:
-      {"phase": 0.4, "action": "sealed", "timestamp": "..."}
-      {"phase": "0.5", "ts": "..."}
-      {"phase": 0.6, "ts": "..."}
+      {"phase": 0.6, "action": "sealed", "timestamp": "..."}
+      {"phase": "0.7", "ts": "..."}
     """
     p = Path("configs/phase_history.json")
     if not p.exists():

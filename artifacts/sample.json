@@ -1,0 +1,6 @@
+{
+  "emitted_at": "2025-10-04T01:25:53Z",
+  "source_seed": "05-artifact_emitter_seed.md",
+  "status": "ok",
+  "items": ["hello.txt", "README.md", "sample.json"]
+}

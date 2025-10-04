@@ -149,3 +149,102 @@ will_commands.md
 will_commands_reference.md
 will_commands_samples.md
 will_data.db
+
+<!-- auto:ironroot_registrar -->
+- tests/test_phase_0_6_api_smoke.py
+
+<!-- auto:ironroot_registrar -->
+- tests/test_phase_0_6_auto_migration_roundtrip.py
+
+<!-- auto:ironroot_registrar -->
+- tests/test_phase_0_6_preseal_end_to_end.py
+
+<!-- auto:ironroot_registrar -->
+- tests/test_phase_0_6_schema_contract.py
+
+<!-- auto:ironroot_registrar -->
+- tools/api_smoke_suite.py
+
+<!-- auto:ironroot_registrar -->
+- tools/db_schema_contract.py
+
+<!-- auto:ironroot_registrar -->
+- tools/db_schema_migrate.py
+
+<!-- auto:ironroot_registrar -->
+- tools/phase_0_6_sealer.py
+
+<!-- auto:ironroot_registrar -->
+- tools/run_all_phase_tests.py
+
+<!-- auto:ironroot_registrar -->
+- files
+
+<!-- auto:ironroot_registrar -->
+- tools/ask_server.py
+
+<!-- auto:ironroot_registrar -->
+- tools/ask_server_mirror.py
+
+<!-- auto:ironroot_registrar -->
+- tools/ask_will.py
+
+<!-- auto:ironroot_registrar -->
+- tools/audit/will_inventory_probe.py
+
+<!-- auto:ironroot_registrar -->
+- tools/auto_phase_guard_fix.py
+
+<!-- auto:ironroot_registrar -->
+- tools/autosave/__init__.py
+
+<!-- auto:ironroot_registrar -->
+- tools/autosave/autosave_helper.py
+
+<!-- auto:ironroot_registrar -->
+- tools/autosave/local_listener.py
+
+<!-- auto:ironroot_registrar -->
+- tools/autosave/userscripts/__init__.py
+
+<!-- auto:ironroot_registrar -->
+- tools/chunker/chunker.py
+
+<!-- auto:ironroot_registrar -->
+- tools/chunker/chunker_cli.py
+
+<!-- auto:ironroot_registrar -->
+- tools/chunker/inspect_chunk_db.py
+
+<!-- auto:ironroot_registrar -->
+- tools/chunker/migrate_backfill_chunk_hashes.py
+
+<!-- auto:ironroot_registrar -->
+- tools/chunker/summarize_and_index_reflex.py
+
+<!-- auto:ironroot_registrar -->
+- tools/file_history_backfill_all.py
+
+<!-- auto:ironroot_registrar -->
+- tools/model_router.py
+
+<!-- auto:ironroot_registrar -->
+- tools/reflex_coverage_report.py
+
+<!-- auto:ironroot_registrar -->
+- tools/reflex_registry_scanner.py
+
+<!-- auto:ironroot_registrar -->
+- tools/reposition_phase_guard.py
+
+<!-- auto:ironroot_registrar -->
+- tools/retriever.py
+
+<!-- auto:ironroot_registrar -->
+- tools/will_browser.py
+
+<!-- auto:ironroot_registrar -->
+- tools/will_search_panel.py
+
+<!-- auto:ironroot_registrar -->
+- tools/artifact_emitter.py

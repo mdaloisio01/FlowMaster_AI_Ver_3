@@ -1,0 +1,51 @@
+{
+"plan_hash": "TO-COMPUTE",
+"seed_sha256": "TO-COMPUTE",
+"phase_scope": "current",
+"summary": {
+"objective": "Adopt Soft Phase Guard posture for Phase 0.8 (warn-by-default; strict via env).",
+"highlights": [
+"Single source of truth for phase; enforcement only at entrypoints",
+"Deterministic index→execute pipeline with idempotency keys",
+"Evidence pack for every run (logs + artifacts)"
+]
+},
+"tasks": [
+{
+"id": "p08-trace_logger",
+"capability": "trace_logger",
+"params": { "breadcrumbs": ["swarm.phase_0_8.start"] },
+"idempotency_key": "TO-COMPUTE:p08-trace_logger"
+},
+{
+"id": "p08-manifest_registrar",
+"capability": "manifest_registrar",
+"params": { "check": ["configs/ironroot_manifest_data.json", "configs/phase_history.json"] },
+"idempotency_key": "TO-COMPUTE:p08-manifest_registrar"
+},
+{
+"id": "p08-memory_writer",
+"capability": "memory_writer",
+"params": { "note": "Soft Phase Guard posture adopted" },
+"idempotency_key": "TO-COMPUTE:p08-memory_writer"
+},
+{
+"id": "p08-cli_tester",
+"capability": "cli_tester",
+"params": { "commands": ["tools/print_current_phase.py", "tools/phase_trace_report.py"] },
+"idempotency_key": "TO-COMPUTE:p08-cli_tester"
+},
+{
+"id": "p08-reviewer",
+"capability": "reviewer",
+"params": { "check_logs": ["logs/reflex_trace_log.jsonl", "logs/phase_guard_log.jsonl"] },
+"idempotency_key": "TO-COMPUTE:p08-reviewer"
+}
+],
+"acceptance": [
+{ "type": "expect", "expr": "trace contains event=swarm.phase_0_8.start" },
+{ "type": "expect", "expr": "print_current_phase reports 0.8" }
+],
+"generated_at": "2025-10-03T00:00:00Z",
+"indexer_version": "0.8.0"
+}
