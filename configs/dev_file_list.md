@@ -248,3 +248,6 @@ will_data.db
 
 <!-- auto:ironroot_registrar -->
 - tools/artifact_emitter.py
+
+<!-- auto:ironroot_registrar -->
+- tools/Swarm_boot.py

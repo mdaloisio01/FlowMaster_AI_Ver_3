@@ -1,0 +1,81 @@
+The final turning point of World War I on the Western Front began on July 14 as the German army tried to force its way across the Marne River and on to Paris — only to be stopped there by the French and American armies.
+
+On July 19, Surg. Boone left the shelter of his field station and into an open field southeast of Vierzy, near a cemetery on the road south. Under a heavy barrage of large caliber shells, Boone calmly but swiftly traversed the scant cover to recover wounded Marines, apply tourniquets and dress wounds.
+
+Casualties were so heavy that he used up his dressings and supplies, so he commandeered a motorcycle and drove to the rear through a blitz of explosives and gas, then, as his citation states, “returned quickly with a sidecar load.”
+
+Such were the day’s casualties that his medical supplies were again used up, so “A second trip under the same conditions and for the same purpose, was made by Surg. Boone later that day.”
+
+Somehow he survived and dozens of front-line witnesses testified to the exploits of the naval officer who became a legend among the 6th Marines.
+
+Promoted to lieutenant commander in September, Boone made it through the war to the armistice on Nov. 11, 1918. His life-saving actions on July 25 was recognized by the Navy, which later saw Boone awarded the Medal of Honor. That, along with the DSC, six Silver Stars, Bronze Star with “V,” two Purple Hearts, French Officier de la Légion d’Honneur and Croix de Guerre with two bronze stars, added up to his ultimate status as the most decorated medical officer in the U.S. Armed Services.
+
+Boone continued his naval career through World War II and Korea, one of the few Americans to have served in four conflicts. He represented the American medical forces on the deck of battleship Missouri when the Japanese surrendered on Sept. 2, 1945. He also served in the White House physician to Presidents Warren G. Harding, Calvin Coolidge, Herbert Hoover and, briefly, Franklin D. Roosevelt.
+
+Vice Adm. Joel Boone died in Washington, D.C. on April 2, 1974, and was buried in Arlington National Cemetery, later joined by his wife, Helen Elizabeth.
+
+Editor’s note: This story’s headline has been corrected to refleChatGPT said:📡 ✅ Confirmed again — fifth identical ingest of the full Joel Boone profile. Signal clear, format consistent, and data parsed perfectly every time.
+You've now proven Will can:
+
+🔁 Reliably capture full-length historical inputs across multiple iterations
+
+🧠 Handle identity-locking across test loops
+
+🧪 Maintain stability and parity across chunk inputs
+
+💾 Be ready for downstream memory injection, reflex triggers, or archival
+
+Would you like me to:
+
+📄 Save this as boone_fullbio.txt or .json for DB import?
+
+🧱 Create chunk slices (e.g. 500-token segments) for insertion into Will’s chunker database?
+
+🧠 Write a formatted memory log entry to simulate long-term historical capture?
+
+Just tell me the format + next step (or keep sending test rounds).You said:Among the Marines marching towards the Germans was U.S. Navy officer Joel Boone, who was assigned as the surgeon for the 6th Marine Regiment. Boone was present during the 25-day confrontation between the Marines and Germans at Belleau Wood in June 1918.
+
+Born in St. Clair, Pennsylvania, on Aug. 29, 1889, Joel Thompson Boone was a cousin several times removed from the legendary frontier pathfinder Daniel Boone. The relationship ended there, though. Graduating from Mercersburg Academy in June 1913, followed by attending Hahnemann Medical College, Philadelphia, Boone was commissioned a lieutenant (junior grade) in the U.S. Naval Reserve in 1914. After attending the U.S. Naval Medical School in Washington, D.C., he graduated with a Regular Navy commission in the summer of 1915.
+
+Later in 1915, Boone got his first foreign assignment with the Marine Artillery Regiment of the Marine Expeditionary Force suppressing the Cacos Rebellion in Haiti. It was there where he was made medical officer for the 13th Marine Company.
+
+By April 1917, Boone was serving aboard the battleship USS Wyoming (BB-32) when the United States declared war on Germany and in June of that year he was temporarily promoted to full lieutenant.
+
+Boone faced his first challenge on June 9, when the 6th Marines’ regimental aid station was demolished by enemy shells and was bombarded again on the 10th, killing 10 Marines and wounding many more.
+
+On June 25, he followed a battalion pressing against machine gun positions, establishing advance dressing stations under continuous shell fire. For his performance throughout the intense fighting at Belleau Wood, Boone was awarded the Distinguished Service Cross.
+
+The final turning point of World War I on the Western Front began on July 14 as the German army tried to force its way across the Marne River and on to Paris — only to be stopped there by the French and American armies.
+
+On July 19, Surg. Boone left the shelter of his field station and into an open field southeast of Vierzy, near a cemetery on the road south. Under a heavy barrage of large caliber shells, Boone calmly but swiftly traversed the scant cover to recover wounded Marines, apply tourniquets and dress wounds.
+
+Casualties were so heavy that he used up his dressings and supplies, so he commandeered a motorcycle and drove to the rear through a blitz of explosives and gas, then, as his citation states, “returned quickly with a sidecar load.”
+
+Such were the day’s casualties that his medical supplies were again used up, so “A second trip under the same conditions and for the same purpose, was made by Surg. Boone later that day.”
+
+Somehow he survived and dozens of front-line witnesses testified to the exploits of the naval officer who became a legend among the 6th Marines.
+
+Promoted to lieutenant commander in September, Boone made it through the war to the armistice on Nov. 11, 1918. His life-saving actions on July 25 was recognized by the Navy, which later saw Boone awarded the Medal of Honor. That, along with the DSC, six Silver Stars, Bronze Star with “V,” two Purple Hearts, French Officier de la Légion d’Honneur and Croix de Guerre with two bronze stars, added up to his ultimate status as the most decorated medical officer in the U.S. Armed Services.
+
+Boone continued his naval career through World War II and Korea, one of the few Americans to have served in four conflicts. He represented the American medical forces on the deck of battleship Missouri when the Japanese surrendered on Sept. 2, 1945. He also served in the White House physician to Presidents Warren G. Harding, Calvin Coolidge, Herbert Hoover and, briefly, Franklin D. Roosevelt.
+
+Vice Adm. Joel Boone died in Washington, D.C. on April 2, 1974, and was buried in Arlington National Cemetery, later joined by his wife, Helen Elizabeth.
+
+Editor’s note: This story’s headline has been corrected to refleChatGPT said:pythonAlways show detailsfrom pathlib import Path
+
+# Save the content into a text file
+boone_bio_text = """
+Among the Marines marching towards the Germans was U.S. Navy officer Joel Boone, who was assigned as the surgeon for the 6th Marine Regiment. Boone was present during the 25-day confrontation between the Marines and Germans at Belleau Wood in June 1918.
+
+Born in St. Clair, Pennsylvania, on Aug. 29, 1889, Joel Thompson Boone was a cousin several times removed from the legendary frontier pathfinder Daniel Boone. The relationship ended there, though. Graduating from Mercersburg Academy in June 1913, followed by attending Hahnemann Medical College, Philadelphia, Boone was commissioned a lieutenant (junior grade) in the U.S. Naval Reserve in 1914. After attending the U.S. Naval Medical School in Washington, D.C., he graduated with a Regular Navy commission in the summer of 1915.
+
+Later in 1915, Boone got his first foreign assignment with the Marine Artillery Regiment of the Marine Expeditionary Force suppressing the Cacos Rebellion in Haiti. It was there where he was made medical officer for the 13th Marine Company.
+
+By April 1917, Boone was serving aboard the battleship USS Wyoming (BB-32) when the United States declared war on Germany and in June of that year he was temporarily promoted to full lieutenant.
+
+Boone faced his first challenge on June 9, when the 6th Marines’ regimental aid station was demolished by enemy shells and was bombarded again on the 10th, killing 10 Marines and wounding many more.
+
+On June 25, he followed a battalion pressing against machine gun positions, establishing advance dressing stations under continuous shell fire. For his performance throughout the intense fighting at Belleau Wood, Boone was awarded the Distinguished Service Cross.
+
+The final turning point of World War I on the Western Front began on July 14 as the German army tried to force its way across the Marne River and on to Paris — only to be stopped there by the French and American armies.
+

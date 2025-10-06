@@ -1,85 +1,96 @@
-# core/trace_logger.py
-# Trace logging with UTF-8 writes and normalized, project-relative source paths.
-
 from __future__ import annotations
+# core/trace_logger.py — central trace + memory logging (no phase enforcement)
 
 import json
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, Optional, Union
 
-LOG_PATH = Path("logs/reflex_trace_log.json")
-LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+# Repo root (.../core -> repo root)
+_REPO_ROOT = Path(__file__).resolve().parent.parent
 
+# Log destinations (JSONL, append-only)
+_LOG_DIR = _REPO_ROOT / "logs"
+_LOG_DIR.mkdir(parents=True, exist_ok=True)
+_TRACE_LOG = _LOG_DIR / "reflex_trace_log.jsonl"
+_MEMORY_LOG = _LOG_DIR / "memory_log.jsonl"
 
-def _find_project_root() -> Path:
-    here = Path(__file__).resolve()
-    for p in [here] + list(here.parents):
-        try:
-            if (p / "configs" / "ironroot_manifest_data.json").exists():
-                return p
-            if (p / "boot").is_dir() and (p / "core").is_dir():
-                return p
-        except Exception:
-            continue
-    return Path.cwd().resolve()
-
-
-_PROJECT_ROOT = _find_project_root()
-_PROJECT_ROOT_RESOLVED = _PROJECT_ROOT.resolve()
-
-
-def _norm_slashes(value: Optional[str]) -> Optional[str]:
-    if value is None:
-        return None
-    return value.replace("\\", "/")
-
-
-def _rel_source(value: Optional[str], default_file: str) -> str:
-    raw = _norm_slashes(value)
-    try:
-        if raw:
-            p = Path(raw).resolve()
-        else:
-            p = Path(default_file).resolve()
-    except Exception:
-        return (raw or default_file).replace("\\", "/")
-
-    try:
-        rel = p.relative_to(_PROJECT_ROOT_RESOLVED)
-        return rel.as_posix()
-    except Exception:
-        return p.as_posix()
+Jsonable = Union[Dict[str, Any], str, int, float, None]
 
 
 def _now_iso() -> str:
+    # UTC ISO timestamp without subseconds for stable diffs
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
 
+def _write_jsonl(path: Path, obj: Dict[str, Any]) -> None:
+    try:
+        with path.open("a", encoding="utf-8", newline="") as f:
+            f.write(json.dumps(obj, ensure_ascii=False) + "\n")
+    except Exception:
+        # Logging must never crash the app
+        pass
+
+
 def log_trace_event(
-    description: str,
+    event: str,
+    data: Jsonable = None,
     *,
     source: Optional[str] = None,
-    tags: Optional[List[str]] = None,
-    content: Optional[Union[str, Dict[str, Any], List[Any]]] = None,
-    phase: Optional[Union[int, float, str]] = None,
+    phase: Optional[float] = None,
+    meta: Optional[Dict[str, Any]] = None,
+    **extra: Any,
 ) -> None:
     """
-    Append a trace event (NDJSON) to logs/reflex_trace_log.json.
-    - Always UTF-8
-    - `source` stored as project-relative path when possible (forward slashes)
+    Record a trace event to logs/reflex_trace_log.jsonl.
+
+    Back-compat: accepts optional keyword args like source=, phase=, meta=,
+    and ignores any additional keywords via **extra.
     """
-    src = _rel_source(source, default_file=__file__)
-
-    rec: Dict[str, Any] = {
+    entry: Dict[str, Any] = {
         "ts": _now_iso(),
-        "description": str(description),
-        "source": src,
-        "tags": list(tags or []),
-        "content": content,
-        "phase": phase,
+        "event": str(event),
+        "data": data,
+        "source": source or "core.trace_logger",
     }
+    if phase is not None:
+        entry["phase"] = phase
+    if meta:
+        entry["meta"] = meta
+    # If callers provided arbitrary extras, store them under "extra" to avoid loss.
+    if extra:
+        entry["extra"] = extra
 
-    line = json.dumps(rec, ensure_ascii=False)
-    with LOG_PATH.open("a", encoding="utf-8", newline="\n") as f:
-        f.write(line + "\n")
+    _write_jsonl(_TRACE_LOG, entry)
+
+
+def log_memory_event(
+    event_type: str,
+    detail: Jsonable = None,
+    meta: Optional[Dict[str, Any]] = None,
+    *,
+    source: Optional[str] = None,
+    phase: Optional[float] = None,
+    **extra: Any,
+) -> None:
+    """
+    Record a memory event to logs/memory_log.jsonl.
+
+    Back-compat: accepts optional source=, phase=, meta= and **extra.
+    """
+    entry: Dict[str, Any] = {
+        "ts": _now_iso(),
+        "type": str(event_type),
+        "detail": detail,
+        "meta": meta or {},
+        "source": source or "core.trace_logger",
+    }
+    if phase is not None:
+        entry["phase"] = phase
+    if extra:
+        entry["extra"] = extra
+
+    _write_jsonl(_MEMORY_LOG, entry)
+
+
+__all__ = ["log_trace_event", "log_memory_event"]

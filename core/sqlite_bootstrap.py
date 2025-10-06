@@ -1,180 +1,104 @@
-# core/sqlite_bootstrap.py
+# === IronRoot Phase Guard (auto-injected) ===
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from boot.boot_path_initializer import inject_paths
+inject_paths()
+from core.phase_control import ensure_phase
+REQUIRED_PHASE = 0.7
+ensure_phase(REQUIRED_PHASE)
+# === /IronRoot Phase Guard ===
 
-from boot.boot_path_initializer import inject_paths  # required path injection
+# /core/sqlite_bootstrap.py
+"""
+SQLite Bootstrap — Will's DB Schema & Initialization (Phase 0.7)
+Purpose:
+  - Define and migrate the schema used by Will (including chunker storage).
+  - Add a de-duplication hash for chunks and enforce uniqueness.
+Phase: 0.7 (IronSpine locked)
+"""
+
+from boot.boot_path_initializer import inject_paths
 inject_paths()
 
 import os
 import sqlite3
-import json
-import datetime
-import contextlib
-from pathlib import Path, PurePosixPath
-from typing import Optional, Dict, Any, Iterable, List
+from typing import Set, Tuple
 
-# Single source of truth for DB path (must expose .as_posix() for early tests)
-DB_PATH: PurePosixPath = PurePosixPath("root/will_data.db")
+from core.memory_interface import log_memory_event
+
+# Unify on the chunker DB so all tools read/write the same store.
+DB_PATH = "chunk_store.db"
 
 
-def _connect() -> sqlite3.Connection:
+def _table_info(cursor, table: str) -> Set[str]:
+    cursor.execute(f"PRAGMA table_info({table});")
+    return {row[1] for row in cursor.fetchall()}  # column name is index 1
+
+
+def _index_names(cursor) -> Set[str]:
+    cursor.execute("PRAGMA index_list(file_chunks);")
+    # row[1] is the index name
+    return {row[1] for row in cursor.fetchall()}
+
+
+def initialize_database() -> None:
     """
-    Returns a sqlite3 connection to the IronRoot database.
-    Callers must not hardcode paths; always use DB_PATH.
+    Create base tables if missing and run safe migrations for Phase 0.7.
+    - Ensures file_chunks exists.
+    - Ensures chunk_hash column exists.
+    - Adds a UNIQUE index on chunk_hash (ignoring NULL values).
     """
-    Path(DB_PATH).parent.mkdir(parents=True, exist_ok=True)
-    con = sqlite3.connect(os.fspath(DB_PATH))
-    con.execute("PRAGMA foreign_keys = ON;")
-    return con
+    os.makedirs(os.path.dirname(DB_PATH) if os.path.dirname(DB_PATH) else ".", exist_ok=True)
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
 
+    # Base table — file chunk storage (created if missing).
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS file_chunks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            file_path TEXT,
+            chunk_index INTEGER,
+            line_start INTEGER,
+            line_end INTEGER,
+            token_count INTEGER,
+            chunk_text TEXT,
+            summary TEXT,
+            chunk_hash TEXT,                   -- Phase 0.7: de-dupe key (normalized SHA-256)
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """
+    )
 
-def _rows_to_dicts(cursor: sqlite3.Cursor, rows: Iterable[Iterable[Any]]) -> List[Dict[str, Any]]:
-    cols = [d[0] for d in cursor.description]
-    return [dict(zip(cols, r)) for r in rows]
+    # Migrate existing table to include chunk_hash if it doesn't exist.
+    existing_cols = _table_info(cursor, "file_chunks")
+    if "chunk_hash" not in existing_cols:
+        cursor.execute("ALTER TABLE file_chunks ADD COLUMN chunk_hash TEXT;")
 
-
-def ensure_tables() -> None:
-    """
-    Create required tables if they do not already exist.
-    This is phase-agnostic and safe to run multiple times.
-    """
-    with contextlib.closing(_connect()) as con, contextlib.closing(con.cursor()) as cur:
-        # boot_events — general boot/report log table used by early-phase tests
-        cur.execute(
+    # Add a UNIQUE index on chunk_hash, but only for non-NULL values to avoid
+    # blocking older rows that don't have hashes yet. New inserts must set it.
+    idx_names = _index_names(cursor)
+    if "ux_file_chunks_chunk_hash" not in idx_names:
+        cursor.execute(
             """
-            CREATE TABLE IF NOT EXISTS boot_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts TEXT NOT NULL,
-                event TEXT,
-                details TEXT
-            )
-            """
-        )
-
-        # manifest — file registry
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS manifest (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                path TEXT UNIQUE NOT NULL,
-                added_ts TEXT,
-                phase TEXT
-            )
+            CREATE UNIQUE INDEX IF NOT EXISTS ux_file_chunks_chunk_hash
+            ON file_chunks(chunk_hash)
+            WHERE chunk_hash IS NOT NULL;
             """
         )
 
-        # memory_events — for dual-logging memory track
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS memory_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts TEXT NOT NULL,
-                tag TEXT NOT NULL,
-                payload TEXT
-            )
-            """
-        )
+    conn.commit()
+    conn.close()
 
-        # reflex_registry — registry of reflex/tool handlers
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS reflex_registry (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts TEXT NOT NULL,
-                reflex_name TEXT NOT NULL,
-                module TEXT,
-                path TEXT,
-                enabled INTEGER DEFAULT 1
-            )
-            """
-        )
-
-        # trace_events — for dual-logging trace track
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS trace_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts TEXT NOT NULL,
-                level TEXT NOT NULL,
-                tag TEXT NOT NULL,
-                message TEXT,
-                context TEXT
-            )
-            """
-        )
-
-        # snapshot_index — used by snapshot tools
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS snapshot_index (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts TEXT NOT NULL,
-                run_id TEXT NOT NULL,
-                mode TEXT NOT NULL,
-                tables_changed INTEGER DEFAULT 0
-            )
-            """
-        )
-
-        # test_ticks — helper table used by tests
-        cur.execute(
-            """
-            CREATE TABLE IF NOT EXISTS test_ticks (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                ts TEXT NOT NULL,
-                tick TEXT NOT NULL
-            )
-            """
-        )
-
-        con.commit()
+    # Memory log so compliance tools can verify bootstrap ran.
+    log_memory_event("Bootstrapping Will's DB (Phase 0.7 schema ready)",
+                     source=__file__, phase=0.7)
 
 
-# Back-compat alias expected by some tools (e.g., tools.check_db_tables)
-def create_tables() -> None:
-    """Alias to ensure_tables(), provided for backward compatibility."""
-    ensure_tables()
-
-
-def list_tables() -> List[str]:
-    """Return a sorted list of tables in the database."""
-    with contextlib.closing(_connect()) as con, contextlib.closing(con.cursor()) as cur:
-        cur.execute("SELECT name FROM sqlite_master WHERE type='table'")
-        return sorted([r[0] for r in cur.fetchall()])
-
-
-def insert_boot_report_entry(event: str, *, ts: Optional[str] = None, details: Optional[Dict[str, Any]] = None) -> int:
-    """
-    Public API expected by early-phase tests.
-    Inserts a row into boot_events and returns the row id.
-    """
-    ensure_tables()
-    if ts is None:
-        ts = datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    payload = json.dumps(details, ensure_ascii=False) if isinstance(details, dict) else None
-
-    with contextlib.closing(_connect()) as con, contextlib.closing(con.cursor()) as cur:
-        cur.execute(
-            "INSERT INTO boot_events (ts, event, details) VALUES (?, ?, ?)",
-            (ts, event, payload),
-        )
-        con.commit()
-        return int(cur.lastrowid)
-
-
-def bootstrap() -> None:
-    """Idempotent bootstrap entrypoint used by `py -m core.sqlite_bootstrap`."""
-    ensure_tables()
+def get_current_phase() -> float:
+    # This file is locked for Phase 0.7 in your current build.
+    return 0.7
 
 
 if __name__ == "__main__":
-    bootstrap()
-    print(f"SQLite bootstrap OK @ {DB_PATH.as_posix()}")
-
-
-__all__ = [
-    "DB_PATH",
-    "ensure_tables",
-    "create_tables",  # back-compat
-    "list_tables",
-    "insert_boot_report_entry",
-    "bootstrap",
-]
+    initialize_database()

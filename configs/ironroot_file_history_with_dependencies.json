@@ -178,8 +178,16 @@
       "deps": [],
       "ts": "2025-10-03T23:37:39Z"
     },
-    "tools/phase_trace_report.py": {},
-    "tools/print_current_phase.py": {},
+    "tools/phase_trace_report.py": {
+      "phase": "0.81",
+      "deps": [],
+      "ts": "2025-10-06T05:07:18Z"
+    },
+    "tools/print_current_phase.py": {
+      "phase": "0.81",
+      "deps": [],
+      "ts": "2025-10-06T05:07:19Z"
+    },
     "tools/reflex_compliance_guard.py": {},
     "tools/reflex_coverage_report.py": {
       "phase": "0.7",
@@ -350,6 +358,12 @@
       "phase": "0.7",
       "deps": [],
       "ts": "2025-10-04T01:27:14Z",
+      "note": "auto-registered"
+    },
+    "tools/Swarm_boot.py": {
+      "phase": "0.81",
+      "deps": [],
+      "ts": "2025-10-06T05:07:17Z",
       "note": "auto-registered"
     }
   },

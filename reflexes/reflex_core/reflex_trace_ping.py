@@ -1,33 +1,46 @@
-# reflexes/reflex_core/reflex_trace_ping.py
-# Canonical Reflex Template (Phase-locked, dual logging, path injection)
+from __future__ import annotations
+# reflexes/reflex_core/reflex_trace_ping.py — simple ping reflex
 
-from boot.boot_path_initializer import inject_paths
-inject_paths()
+import sys
+from pathlib import Path
 
-from core.phase_control import ensure_phase, REQUIRED_PHASE
-from core.memory_interface import log_memory_event
-from core.trace_logger import log_trace_event
+# Ensure repo root on path (…/reflexes/reflex_core -> repo root)
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def run_cli():
-    ensure_phase()  # fail-closed if not REQUIRED_PHASE
+from boot import boot_path_initializer as bpi
+bpi.inject_paths()
 
-    # Dual logging: memory + trace
-    log_memory_event(
-        event_text="reflex_trace_ping memory",
-        source=__file__.replace("\\", "/"),
-        tags=["reflex", "test", "trace"],
-        content={"msg": "ping"},
-        phase=REQUIRED_PHASE,
-    )
+from core.trace_logger import log_trace_event, log_memory_event
+from core.phase_control import get_current_phase
+
+def run_cli() -> None:
+    phase = get_current_phase()
+
+    # Start trace
     log_trace_event(
-        description="reflex_trace_ping executed",
-        source=__file__.replace("\\", "/"),
-        tags=["reflex", "test", "trace"],
-        content={"result": "ok"},
-        phase=REQUIRED_PHASE,
+        "reflex_trace_ping.start",
+        {"message": "ping starting"},
+        source="reflexes.reflex_core.reflex_trace_ping",
+        phase=phase,
     )
 
-    print("✅ trace_ping ok")
+    # Optional: write a tiny memory event too
+    log_memory_event(
+        "reflex_trace_ping",
+        {"ok": True},
+        source="reflexes.reflex_core.reflex_trace_ping",
+        phase=phase,
+    )
+
+    # End trace
+    log_trace_event(
+        "reflex_trace_ping.done",
+        {"message": "ping complete"},
+        source="reflexes.reflex_core.reflex_trace_ping",
+        phase=phase,
+    )
 
 if __name__ == "__main__":
     run_cli()

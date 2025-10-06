@@ -1,0 +1,45 @@
+Scanned: D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1
+Total files: 641  Total size: 133.1 MB
+
+Top-level directories:
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\.venv  files=1  size=348.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\AI Logs  files=0  size=0.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\autopilot  files=2  size=807.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\backups  files=0  size=0.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\Clients  files=0  size=0.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\configs  files=28  size=11.3 KB  KEEP?
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\data  files=1  size=24.0 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\data_scrape  files=2  size=869.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\docs  files=3  size=627.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\goal_trigger  files=1  size=32.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\gui  files=9  size=8.6 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\interfaces  files=1  size=1018.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\logs  files=6  size=366.0 B  KEEP?
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\memory  files=26  size=177.7 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\memory_exports  files=1  size=2.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\mobile  files=1  size=1.3 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\models  files=0  size=0.0 B  EXCLUDED
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\modules  files=1  size=0.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\node_modules  files=0  size=0.0 B  EXCLUDED
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\notebooks  files=1  size=256.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\output  files=1  size=65.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\reflex_auto_backup  files=0  size=0.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\reflexes  files=33  size=19.0 KB  KEEP?
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\reports  files=1  size=233.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\routes  files=3  size=858.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\seeds  files=7  size=8.6 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\setup  files=1  size=1.2 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\source_docs  files=1  size=103.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\static  files=5  size=4.1 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\summaries  files=0  size=0.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\tools  files=119  size=125.8 MB  KEEP?
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\upgrades  files=0  size=0.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\utils  files=6  size=5.0 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\venv  files=0  size=0.0 B  EXCLUDED
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\will_brain  files=3  size=856.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\will_core  files=4  size=2.9 KB  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\will_memory  files=0  size=0.0 B  
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\will_reflexes  files=1  size=818.0 B  
+
+Big files (possible LLM/checkpoints):
+  - D:\Business\Roaming_Raven\AI_Data_Assistant\FlowMaster_AI\FlowMaster AI\FlowMaster_AI_Ver_1\tools\tailwindcss.exe  125.7 MB

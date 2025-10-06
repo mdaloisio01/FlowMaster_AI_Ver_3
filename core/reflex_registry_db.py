@@ -1,62 +1,67 @@
 # core/reflex_registry_db.py
-
-from boot.boot_path_initializer import inject_paths  # required path injection
+from boot.boot_path_initializer import inject_paths
 inject_paths()
 
 import sqlite3
-import contextlib
-import pathlib
-from typing import List, Dict, Any
+from pathlib import Path
+from typing import List, Dict, Any, Optional
+from core.phase_control import REQUIRED_PHASE, ensure_phase
+from core.sqlite_bootstrap import DB_PATH, ensure_tables
+from core.memory_interface import log_memory_event
+from core.trace_logger import log_trace_event
 
-# Always use the shared DB path (never hardcode)
-from core.sqlite_bootstrap import DB_PATH
-
-
-def _rows_to_dicts(cursor: sqlite3.Cursor, rows: list) -> List[Dict[str, Any]]:
-    cols = [d[0] for d in cursor.description]
-    return [dict(zip(cols, r)) for r in rows]
-
-
-def _normalize_possible_paths(row: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Normalize any value that looks like a filesystem path to forward slashes.
-    We consider keys containing 'path' or common file-ish keys.
-    """
-    for k, v in list(row.items()):
-        if isinstance(v, str):
-            lk = k.lower()
-            if "path" in lk or lk in {"module", "file", "script"}:
-                if ("/" in v) or ("\\" in v):
-                    row[k] = pathlib.PurePosixPath(v).as_posix()
-    return row
-
+def _connect() -> sqlite3.Connection:
+    ensure_tables()
+    return sqlite3.connect(Path(DB_PATH).as_posix())
 
 def fetch_all_reflexes() -> List[Dict[str, Any]]:
-    """
-    Phase-agnostic read of the reflex registry.
+    ensure_phase(REQUIRED_PHASE)
+    run_id = "reflex_registry_fetch"
+    log_memory_event("reflex_registry.fetch:start", source=__file__, tags=["tool","start"], phase=REQUIRED_PHASE, content={"run_id":run_id})
+    log_trace_event("reflex_registry.fetch:start", source=__file__, tags=["tool","start"], phase=REQUIRED_PHASE, content={"run_id":run_id})
 
-    Source:
-      - SQLite table 'reflex_registry' (if present). Returns full row dicts as-is,
-        but normalizes any path-like fields to forward slashes.
+    with _connect() as con:
+        con.execute("""
+            CREATE TABLE IF NOT EXISTS reflex_registry (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL,
+                reflex_name TEXT NOT NULL,
+                module TEXT NOT NULL,
+                path TEXT NOT NULL,
+                enabled INTEGER DEFAULT 1
+            )
+        """)
+        rows = con.execute("SELECT id, ts, reflex_name, module, path, enabled FROM reflex_registry ORDER BY id ASC;").fetchall()
+        out = [{"id":r[0],"ts":r[1],"reflex_name":r[2],"module":r[3],"path":r[4],"enabled":int(r[5])} for r in rows]
 
-    Never raises; returns [] on any unexpected issue or if the table is missing/empty.
-    """
-    with contextlib.ExitStack() as stack:
-        try:
-            con = stack.enter_context(sqlite3.connect(DB_PATH))
-            cur = con.cursor()
-            cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='reflex_registry'")
-            if not cur.fetchone():
-                return []
-            cur.execute("SELECT * FROM reflex_registry")
-            rows = cur.fetchall()
-            if not rows:
-                return []
-            results = _rows_to_dicts(cur, rows)
-            return [_normalize_possible_paths(r) for r in results]
-        except Exception:
-            # Tests expect robustness: on any issue, return an empty list rather than raising.
-            return []
+    log_memory_event("reflex_registry.fetch:report", source=__file__, tags=["tool","report"], phase=REQUIRED_PHASE, content={"run_id":run_id,"count":len(out)})
+    log_trace_event("reflex_registry.fetch:done", source=__file__, tags=["tool","done"], phase=REQUIRED_PHASE, content={"run_id":run_id})
+    return out
 
+def register_reflex(*, ts: str, reflex_name: str, module: str, path: str, enabled: bool = True) -> int:
+    ensure_phase(REQUIRED_PHASE)
+    run_id = f"reflex_registry_register:{reflex_name}"
+    log_memory_event("reflex_registry.register:start", source=__file__, tags=["tool","start"], phase=REQUIRED_PHASE, content={"run_id":run_id,"reflex_name":reflex_name})
+    log_trace_event("reflex_registry.register:start", source=__file__, tags=["tool","start"], phase=REQUIRED_PHASE, content={"run_id":run_id,"reflex_name":reflex_name})
 
-__all__ = ["fetch_all_reflexes"]
+    with _connect() as con:
+        con.execute("""
+            CREATE TABLE IF NOT EXISTS reflex_registry (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                ts TEXT NOT NULL,
+                reflex_name TEXT NOT NULL,
+                module TEXT NOT NULL,
+                path TEXT NOT NULL,
+                enabled INTEGER DEFAULT 1
+            )
+        """)
+        cur = con.execute("""
+            INSERT INTO reflex_registry (ts, reflex_name, module, path, enabled)
+            VALUES (?, ?, ?, ?, ?)
+        """, (ts, reflex_name, module, path.replace("\\","/"), 1 if enabled else 0))
+        con.commit()
+        new_id = int(cur.lastrowid)
+
+    log_memory_event("reflex_registry.register:done", source=__file__, tags=["tool","done"], phase=REQUIRED_PHASE, content={"run_id":run_id,"id":new_id})
+    log_trace_event("reflex_registry.register:done", source=__file__, tags=["tool","done"], phase=REQUIRED_PHASE, content={"run_id":run_id,"id":new_id})
+    return new_id

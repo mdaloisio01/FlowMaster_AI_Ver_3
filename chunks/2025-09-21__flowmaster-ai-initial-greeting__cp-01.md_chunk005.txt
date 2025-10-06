@@ -1,0 +1,18 @@
+On July 19, Surg. Boone left the shelter of his field station and into an open field southeast of Vierzy, near a cemetery on the road south. Under a heavy barrage of large caliber shells, Boone calmly but swiftly traversed the scant cover to recover wounded Marines, apply tourniquets and dress wounds.
+
+Casualties were so heavy that he used up his dressings and supplies, so he commandeered a motorcycle and drove to the rear through a blitz of explosives and gas, then, as his citation states, “returned quickly with a sidecar load.”
+
+Such were the day’s casualties that his medical supplies were again used up, so “A second trip under the same conditions and for the same purpose, was made by Surg. Boone later that day.”
+
+Somehow he survived and dozens of front-line witnesses testified to the exploits of the naval officer who became a legend among the 6th Marines.
+
+Promoted to lieutenant commander in September, Boone made it through the war to the armistice on Nov. 11, 1918. His life-saving actions on July 25 was recognized by the Navy, which later saw Boone awarded the Medal of Honor. That, along with the DSC, six Silver Stars, Bronze Star with “V,” two Purple Hearts, French Officier de la Légion d’Honneur and Croix de Guerre with two bronze stars, added up to his ultimate status as the most decorated medical officer in the U.S. Armed Services.
+
+Boone continued his naval career through World War II and Korea, one of the few Americans to have served in four conflicts. He represented the American medical forces on the deck of battleship Missouri when the Japanese surrendered on Sept. 2, 1945. He also served in the White House physician to Presidents Warren G. Harding, Calvin Coolidge, Herbert Hoover and, briefly, Franklin D. Roosevelt.
+
+Vice Adm. Joel Boone died in Washington, D.C. on April 2, 1974, and was buried in Arlington National Cemetery, later joined by his wife, Helen Elizabeth.
+"""
+
+# Save as text file
+file_path = Path("/mnt/data/boone_fullbio.txt")
+file_path.write_text(boone_bio_text.strip())

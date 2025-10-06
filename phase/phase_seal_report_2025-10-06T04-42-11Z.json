@@ -1,0 +1,20 @@
+{
+  "ts": "2025-10-06T04:42:11Z",
+  "action": "seal",
+  "sealed_through": "0.8",
+  "markers_created": [
+    "phase_0_1.sealed",
+    "phase_0_2.sealed",
+    "phase_0_3.sealed",
+    "phase_0_4.sealed",
+    "phase_0_5.sealed",
+    "phase_0_6.sealed",
+    "phase_0_7.sealed",
+    "phase_0_8.sealed"
+  ],
+  "notes": [
+    "This pack does NOT modify your current_phase.",
+    "Drop `seals/*` into your repo root under ./seals to mark phases sealed.",
+    "Append the JSONL rows to your logs to preserve audit trail."
+  ]
+}

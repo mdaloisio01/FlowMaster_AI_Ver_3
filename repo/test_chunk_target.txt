@@ -1,0 +1,5 @@
+This is a test file.
+We are verifying that Will's chunker engine can scan, tokenize, chunk, and log this file correctly.
+This should be split into chunks of text no larger than the token limit.
+Each chunk will be written to SQLite and optionally exported to /chunks/ as a .txt.
+The summarizer (if enabled) will create a short summary for each chunk.

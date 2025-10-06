@@ -1,0 +1,54 @@
+[33mtag v0.7.0-sealed[m
+Tagger: Mark Davis <mark@example.com>
+Date:   Fri Oct 3 16:33:10 2025 -0700
+
+Phase 0.7 sealed
+
+[33mcommit 2820d4f3e645acf38868c07b686b4ed8153fc7e4[m[33m ([m[1;33mtag: [m[1;33mv0.7.0-sealed[m[33m, [m[1;33mtag: [m[1;33mphase-0.7-start[m[33m)[m
+Author: Mark Davis <mark@example.com>
+Date:   Sat Aug 30 22:06:19 2025 -0700
+
+    Phase lock bump: REQUIRED_PHASE=0.7
+
+[1mdiff --git a/core/phase_control.py b/core/phase_control.py[m
+[1mindex d8f32eb..13c8531 100644[m
+[1m--- a/core/phase_control.py[m
+[1m+++ b/core/phase_control.py[m
+[36m@@ -1,4 +1,4 @@[m
+[31m-# core/phase_control.py[m
+[32m+[m[32m﻿# core/phase_control.py[m
+ [m
+ from boot.boot_path_initializer import inject_paths  # required path injection[m
+ inject_paths()[m
+[36m@@ -9,8 +9,8 @@[m [mfrom pathlib import Path[m
+ from typing import Optional, Any[m
+ [m
+ # Phase lock — update as you progress through phases[m
+[31m-# After sealing 0.5 -> 0.6, REQUIRED_PHASE must be 0.6[m
+[31m-REQUIRED_PHASE: float = 0.6[m
+[32m+[m[32m# After sealing 0.6 -> 0.7, REQUIRED_PHASE must be 0.7[m
+[32m+[m[32mREQUIRED_PHASE: float = 0.7[m
+ [m
+ [m
+ def _parse_phase(v: Any) -> Optional[float]:[m
+[36m@@ -41,7 +41,7 @@[m [mdef _read_phase_from_env() -> Optional[float]:[m
+ def _read_phase_from_manifest() -> Optional[float]:[m
+     """[m
+     Prefer the manifest's explicit current phase if present:[m
+[31m-      configs/ironroot_manifest_data.json -> {"current_phase": 0.6, ...}[m
+[32m+[m[32m      configs/ironroot_manifest_data.json -> {"current_phase": 0.7, ...}[m
+     Falls back to a top-level "phase" if that convention is used.[m
+     """[m
+     p = Path("configs/ironroot_manifest_data.json")[m
+[36m@@ -64,9 +64,8 @@[m [mdef _read_phase_from_history() -> Optional[float]:[m
+     Next priority: the tail of configs/phase_history.json["history"].[m
+     We scan from the end to find the most recent numeric 'phase'.[m
+     Entries may look like:[m
+[31m-      {"phase": 0.4, "action": "sealed", "timestamp": "..."}[m
+[31m-      {"phase": "0.5", "ts": "..."}[m
+[31m-      {"phase": 0.6, "ts": "..."}[m
+[32m+[m[32m      {"phase": 0.6, "action": "sealed", "timestamp": "..."}[m
+[32m+[m[32m      {"phase": "0.7", "ts": "..."}[m
+     """[m
+     p = Path("configs/phase_history.json")[m
+     if not p.exists():[m

@@ -1,204 +1,156 @@
 # tools/ironroot_registrar.py
-# Registers files into:
-#   - configs/ironroot_manifest_data.json
-#   - configs/ironroot_file_history_with_dependencies.json
-#   - configs/dev_file_list.md
-#
-# IronRoot rules: path injection first, phase lock, dual logging, UTF-8, forward slashes.
-
+# Registrar for IronRoot configs (manifest, dev_file_list, file history)
+# - Provides register_path() and CLI
+# - UTF-8 writes; forward slashes; dual logging; phase lock
 from boot.boot_path_initializer import inject_paths
 inject_paths()
 
-import argparse
-import json
+import argparse, json, os, sys, time
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import List, Optional, Dict, Any
 
-from core.phase_control import ensure_phase, REQUIRED_PHASE
+from core.phase_control import REQUIRED_PHASE, ensure_phase
 from core.memory_interface import log_memory_event
 from core.trace_logger import log_trace_event
 
-# ---- constants ----
+CFG_MANIFEST = Path("configs/ironroot_manifest_data.json")
+CFG_DEVLIST  = Path("configs/dev_file_list.md")
+CFG_HISTORY  = Path("configs/ironroot_file_history_with_dependencies.json")
 
-MANIFEST_PATH = Path("configs/ironroot_manifest_data.json")
-HISTORY_PATH = Path("configs/ironroot_file_history_with_dependencies.json")
-DEVLIST_PATH = Path("configs/dev_file_list.md")
+def _now_utc() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
-# Default Phase 0.5 artifacts to register (alpha-sorted)
-DEFAULT_FILES = [
-    "core/snapshot_manager.py",
-    "reflexes/reflex_core/reflex_table_tick.py",
-    "reflexes/reflex_core/reflex_trace_ping.py",
-    "tests/test_phase_0_5_snapshot_diffs.py",
-    "tests/test_phase_0_5_trace_memory_integrity.py",
-    "tools/db_snapshot_auditor.py",
-    "tools/trace_memory_crosscheck.py",
-    "tools/trace_memory_snapshot.py",
-]
+def _norm(p: str) -> str:
+    return p.replace("\\", "/")
 
-# Dependencies per file (forward slashes). Conservative (safe) graph.
-COMMON_DEPS = [
-    "core/phase_control.py",
-    "core/sqlite_bootstrap.py",
-    "core/memory_interface.py",
-    "core/trace_logger.py",
-]
+def _read_json(p: Path) -> Any:
+    if not p.exists():
+        return {}
+    return json.loads(p.read_text(encoding="utf-8"))
 
-FILE_DEPS: Dict[str, List[str]] = {
-    "core/snapshot_manager.py": ["core/sqlite_bootstrap.py"],
-    "reflexes/reflex_core/reflex_table_tick.py": COMMON_DEPS,
-    "reflexes/reflex_core/reflex_trace_ping.py": [
-        "core/phase_control.py",
-        "core/memory_interface.py",
-        "core/trace_logger.py",
-    ],
-    "tests/test_phase_0_5_snapshot_diffs.py": [
-        "core/phase_control.py",
-        "core/sqlite_bootstrap.py",
-        "tools/trace_memory_snapshot.py",
-    ],
-    "tests/test_phase_0_5_trace_memory_integrity.py": [
-        "core/phase_control.py",
-        "tools/trace_memory_snapshot.py",
-        "tools/trace_memory_crosscheck.py",
-    ],
-    "tools/db_snapshot_auditor.py": COMMON_DEPS,
-    "tools/trace_memory_crosscheck.py": COMMON_DEPS,
-    "tools/trace_memory_snapshot.py": COMMON_DEPS + ["core/snapshot_manager.py"],
-}
+def _write_json(p: Path, data: Any) -> None:
+    p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
 
-# ---- helpers ----
-
-def _read_json(path: Path) -> dict:
-    text = path.read_text(encoding="utf-8")
-    return json.loads(text)
-
-def _write_json(path: Path, data: dict) -> None:
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
-
-def _alpha_unique(seq: List[str]) -> List[str]:
-    return sorted(sorted(set(seq)), key=lambda s: s.lower())
-
-def _category_for(path: str) -> str:
-    # first segment before slash
-    return path.split("/", 1)[0] if "/" in path else "root"
-
-def _ensure_manifest_lists(mani: dict) -> None:
-    mani.setdefault("manifest", {})
-    for k in ["core", "reflexes", "tools", "sandbox", "tests", "configs", "seeds", "all_files"]:
-        mani["manifest"].setdefault(k, [])
-    mani.setdefault("files", [])
-
-def _register_manifest(mani: dict, files: List[str]) -> Tuple[int, int]:
-    _ensure_manifest_lists(mani)
-    added_cats = 0
-    added_all = 0
+def _ensure_manifest_has(files: List[str]) -> bool:
+    changed = False
+    data = _read_json(CFG_MANIFEST) or {}
+    arr = data.setdefault("files", [])
     for f in files:
-        cat = _category_for(f)
-        # Put unknown categories under 'configs' if they are configs, else under 'all_files' only
-        target_list = mani["manifest"].get(cat)
-        if target_list is None:
-            target_list = mani["manifest"].setdefault(cat, [])
-        before = len(target_list)
-        target_list = list(target_list) + [f]
-        mani["manifest"][cat] = _alpha_unique(target_list)
-        added_cats += int(len(mani["manifest"][cat]) > before)
+        if f not in arr:
+            arr.append(f)
+            changed = True
+    data["files"] = sorted(set(arr), key=lambda s: s)
+    if changed:
+        _write_json(CFG_MANIFEST, data)
+    return changed
 
-        # all_files + top-level files
-        mani["manifest"]["all_files"] = _alpha_unique(list(mani["manifest"]["all_files"]) + [f])
-        mani["files"] = _alpha_unique(list(mani["files"]) + [f])
-        added_all += 1
-    return added_cats, added_all
-
-def _register_history(hist: dict, files: List[str], phase: float) -> int:
-    hist.setdefault("history", {})
-    count = 0
+def _ensure_devlist_has(files: List[str]) -> bool:
+    existing = CFG_DEVLIST.read_text(encoding="utf-8") if CFG_DEVLIST.exists() else ""
+    changed = False
+    tail: List[str] = []
     for f in files:
-        if f not in hist["history"]:
-            deps = FILE_DEPS.get(f, [])
-            hist["history"][f] = {"phase": phase, "dependencies": deps}
-            count += 1
-    # maintain alpha key order by rewriting
-    ordered = {k: hist["history"][k] for k in _alpha_unique(list(hist["history"].keys()))}
-    hist["history"] = ordered
-    return count
+        if f not in existing:
+            tail.append(f"- {f}")
+            changed = True
+    if changed:
+        block = []
+        block.append("")
+        block.append("<!-- auto:ironroot_registrar -->")
+        block.extend(tail)
+        text = existing + ("\n" if existing and not existing.endswith("\n") else "") + "\n".join(block) + "\n"
+        CFG_DEVLIST.write_text(text, encoding="utf-8", newline="\n")
+    return changed
 
-def _register_devlist(devlist_path: Path, files: List[str]) -> int:
-    if devlist_path.exists():
-        lines = [ln.strip() for ln in devlist_path.read_text(encoding="utf-8").splitlines() if ln.strip()]
-    else:
-        lines = []
-    before = set(lines)
-    lines = _alpha_unique(lines + files)
-    devlist_path.write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
-    return len(set(lines) - before)
+def _ensure_history_has(files: List[str], phase_value: Optional[float], deps: Optional[List[str]]) -> bool:
+    changed = False
+    data = _read_json(CFG_HISTORY)
+    if not data:
+        data = {"history": {}}
+    # Auditor expects dict form {"history": {path: {...}}}
+    if isinstance(data.get("history"), list):
+        # normalize any legacy list into dict
+        hist_dict = {}
+        for e in data["history"]:
+            if isinstance(e, dict) and "path" in e:
+                hist_dict[e["path"]] = {k: e.get(k) for k in ("phase","deps","ts","note")}
+        data["history"] = hist_dict
+    elif not isinstance(data.get("history"), dict):
+        data["history"] = {}
 
-def run_cli() -> None:
-    ensure_phase()
+    hist: Dict[str, Any] = data["history"]
+    phase_str = str(phase_value if phase_value is not None else REQUIRED_PHASE)
+    ts = _now_utc()
+    deps = deps or []
 
-    parser = argparse.ArgumentParser(description="IronRoot Registrar", allow_abbrev=False)
-    parser.add_argument("--files-json", default=None,
-                        help="JSON array of file paths to register. If omitted, registers Phase 0.5 defaults.")
-    parser.add_argument("--phase", default="0.5", help="Phase number to record in history (default: 0.5).")
-    parser.add_argument("--apply", action="store_true", help="Apply changes (writes to files).")
-    args = parser.parse_args()
+    for f in files:
+        entry = hist.get(f)
+        if not isinstance(entry, dict):
+            hist[f] = {"phase": phase_str, "deps": deps, "ts": ts, "note": "auto-registered"}
+            changed = True
+        else:
+            upd = False
+            if "phase" not in entry: entry["phase"] = phase_str; upd = True
+            if "deps"  not in entry: entry["deps"]  = deps;       upd = True
+            if "ts"    not in entry: entry["ts"]    = ts;         upd = True
+            if upd: changed = True
 
-    # Determine file list
+    if changed:
+        _write_json(CFG_HISTORY, data)
+    return changed
+
+def register_path(path: str, *, phase: Optional[float] = None, deps: Optional[List[str]] = None) -> Dict[str, Any]:
+    """Register a single path across manifest, dev list, and file history."""
+    ensure_phase(REQUIRED_PHASE)
+    p = _norm(path)
+    run_id = f"registrar:{p}"
+    log_memory_event("registrar:start", source=__file__, tags=["tool","start"], phase=REQUIRED_PHASE, content={"run_id":run_id,"path":p})
+    log_trace_event("registrar:start", source=__file__, tags=["tool","start"], phase=REQUIRED_PHASE, content={"run_id":run_id,"path":p})
+
+    changed_any = False
+    changed_any |= _ensure_manifest_has([p])
+    changed_any |= _ensure_devlist_has([p])
+    changed_any |= _ensure_history_has([p], phase, deps)
+
+    result = {"path": p, "changed": changed_any, "phase": str(phase if phase is not None else REQUIRED_PHASE)}
+    log_memory_event("registrar:report", source=__file__, tags=["tool","report"], phase=REQUIRED_PHASE, content={"run_id":run_id,"result":result})
+    log_trace_event("registrar:done", source=__file__, tags=["tool","done"], phase=REQUIRED_PHASE, content={"run_id":run_id})
+    return result
+
+def register_paths(paths: List[str], *, phase: Optional[float] = None, deps: Optional[List[str]] = None) -> List[Dict[str, Any]]:
+    ensure_phase(REQUIRED_PHASE)
+    results = []
+    for p in sorted({_norm(x) for x in paths}):
+        results.append(register_path(p, phase=phase, deps=deps))
+    return results
+
+def main():
+    ensure_phase(REQUIRED_PHASE)
+    ap = argparse.ArgumentParser(description="IronRoot registrar for manifest/devlist/history.")
+    ap.add_argument("--path", dest="paths", action="append", help="File path to register (repeatable).")
+    ap.add_argument("--files-json", type=str, default=None, help="JSON array of file paths to register.")
+    ap.add_argument("--phase", type=float, default=None, help="Phase value to record (defaults to REQUIRED_PHASE).")
+    ap.add_argument("--deps", type=str, default="", help="Comma-separated dependency paths.")
+    ap.add_argument("--apply", action="store_true", help="Apply changes (for hooks).")
+    args = ap.parse_args()
+
+    paths = [p for p in (args.paths or []) if p]
     if args.files_json:
         try:
-            files = json.loads(args.files_json)
-            if not isinstance(files, list) or not all(isinstance(x, str) for x in files):
-                raise ValueError
-        except Exception:
-            raise RuntimeError("--files-json must be a JSON array of strings.")
-    else:
-        files = DEFAULT_FILES[:]
+            paths.extend(list(json.loads(args.files_json)))
+        except Exception as e:
+            print(f"--files-json parse error: {e}", file=sys.stderr)
+            sys.exit(2)
 
-    # Normalize paths to forward slashes and alpha-sort
-    files = _alpha_unique([p.replace("\\", "/") for p in files])
+    if not paths:
+        print("No paths provided.", file=sys.stderr)
+        sys.exit(2)
 
-    # Log start
-    payload = {"files": files, "phase": args.phase, "apply": bool(args.apply)}
-    src = __file__.replace("\\", "/")
-    log_memory_event("ironroot_registrar start", source=src, tags=["tool", "manifest", "history"],
-                     content=payload, phase=REQUIRED_PHASE)
-    log_trace_event("ironroot_registrar start", source=src, tags=["tool", "manifest", "history"],
-                    content=payload, phase=REQUIRED_PHASE)
+    deps = [d for d in args.deps.split(",") if d] if args.deps else None
 
-    # Load current configs
-    mani = _read_json(MANIFEST_PATH)
-    hist = _read_json(HISTORY_PATH)
-
-    # Apply registrations (in-memory first)
-    _ensure_manifest_lists(mani)
-    cats_added, all_added = _register_manifest(mani, files)
-    hist_added = _register_history(hist, files, float(args.phase))
-    dev_added = _register_devlist(DEVLIST_PATH, files) if args.apply else 0  # only write dev list on apply; preview prints planned adds
-
-    # Write if --apply
-    if args.apply:
-        _write_json(MANIFEST_PATH, mani)
-        _write_json(HISTORY_PATH, hist)
-
-    # Summary
-    print(f"[registrar] files={len(files)} preview={'no' if args.apply else 'yes'}")
-    print(f"[registrar] manifest: categories_touched≈{cats_added}, all_files+files_added={all_added}")
-    print(f"[registrar] history: new_entries={hist_added}")
-    if args.apply:
-        print(f"[registrar] dev_file_list: new_lines={dev_added}")
-
-    # Log done
-    done_payload = {
-        "applied": bool(args.apply),
-        "manifest_cats_touched": cats_added,
-        "manifest_files_added": all_added,
-        "history_added": hist_added,
-        "dev_list_added": dev_added if args.apply else None,
-    }
-    log_memory_event("ironroot_registrar done", source=src, tags=["tool", "manifest", "history"],
-                     content=done_payload, phase=REQUIRED_PHASE)
-    log_trace_event("ironroot_registrar done", source=src, tags=["tool", "manifest", "history"],
-                    content=done_payload, phase=REQUIRED_PHASE)
+    # In IronRoot, registrar always applies; --apply exists to satisfy hooks.
+    out = register_paths(paths, phase=args.phase, deps=deps)
+    for r in out:
+        print(f"{r['path']} -> {'changed' if r['changed'] else 'ok'} (phase {r['phase']})")
 
 if __name__ == "__main__":
-    run_cli()
+    main()

@@ -1,0 +1,2 @@
+﻿stash@{0}: On phase-0.8-dev: temp: clean working tree
+stash@{1}: On phase-0.8-dev: temp: switch to master

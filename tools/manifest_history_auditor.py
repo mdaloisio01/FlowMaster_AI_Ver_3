@@ -42,6 +42,7 @@ def _in_manifest(mani: dict, f: str) -> bool:
     return in_files and in_all and in_cat
 
 def _in_history(hist: dict, f: str) -> bool:
+    # Auditor expects dict form: {"history": { "<path>": {...} } }
     return f in hist.get("history", {})
 
 def _in_devlist(text: str, f: str) -> bool:
@@ -56,8 +57,8 @@ def run_cli() -> None:
 
     payload_start = {"auto_fix": bool(args.auto_fix), "phase_files": PHASE_FILES}
     src = __file__.replace("\\", "/")
-    log_memory_event("manifest_history_auditor start", source=src, tags=["tool", "manifest", "history"], content=payload_start, phase=REQUIRED_PHASE)
-    log_trace_event("manifest_history_auditor start", source=src, tags=["tool", "manifest", "history"], content=payload_start, phase=REQUIRED_PHASE)
+    log_memory_event("manifest_history_auditor start", source=src, tags=["tool", "manifest", "history", "start"], content=payload_start, phase=REQUIRED_PHASE)
+    log_trace_event("manifest_history_auditor start", source=src, tags=["tool", "manifest", "history", "start"], content=payload_start, phase=REQUIRED_PHASE)
 
     mani = _read_json(MANIFEST)
     hist = _read_json(HISTORY)
@@ -75,9 +76,20 @@ def run_cli() -> None:
         if not _in_devlist(dev_text, f):
             missing_devlist.append(f)
 
+    # Human stdout
     print("[audit] manifest missing:", missing_manifest or "none")
     print("[audit] history missing:", missing_history or "none")
     print("[audit] dev_file_list missing:", missing_devlist or "none")
+
+    # NEW: explicit report triplet event
+    payload_report = {
+        "missing_manifest": missing_manifest,
+        "missing_history": missing_history,
+        "missing_devlist": missing_devlist,
+        "auto_fix_requested": bool(args.auto_fix),
+    }
+    log_memory_event("manifest_history_auditor report", source=src, tags=["tool", "manifest", "history", "report"], content=payload_report, phase=REQUIRED_PHASE)
+    log_trace_event("manifest_history_auditor report", source=src, tags=["tool", "manifest", "history", "report"], content=payload_report, phase=REQUIRED_PHASE)
 
     if args.auto_fix and (missing_manifest or missing_history or missing_devlist):
         # Register the union of missing files
@@ -85,9 +97,8 @@ def run_cli() -> None:
         import subprocess, sys, json as _json
         cmd = [
             sys.executable, "-m", "tools.ironroot_registrar",
-            "--files-json", _json.dumps(todo),
+            "--path", *todo,
             "--phase", "0.5",
-            "--apply",
         ]
         cp = subprocess.run(cmd, capture_output=True, text=True)
         print("[audit] registrar output:\n" + (cp.stdout or cp.stderr))
@@ -98,8 +109,8 @@ def run_cli() -> None:
         "missing_devlist": missing_devlist,
         "auto_fixed": bool(args.auto_fix),
     }
-    log_memory_event("manifest_history_auditor done", source=src, tags=["tool", "manifest", "history"], content=payload_done, phase=REQUIRED_PHASE)
-    log_trace_event("manifest_history_auditor done", source=src, tags=["tool", "manifest", "history"], content=payload_done, phase=REQUIRED_PHASE)
+    log_memory_event("manifest_history_auditor done", source=src, tags=["tool", "manifest", "history", "done"], content=payload_done, phase=REQUIRED_PHASE)
+    log_trace_event("manifest_history_auditor done", source=src, tags=["tool", "manifest", "history", "done"], content=payload_done, phase=REQUIRED_PHASE)
 
 if __name__ == "__main__":
     run_cli()

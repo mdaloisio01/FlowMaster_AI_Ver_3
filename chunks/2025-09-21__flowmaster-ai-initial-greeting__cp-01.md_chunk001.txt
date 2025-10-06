@@ -1,0 +1,126 @@
+“Donald Trump made it clear, don’t even bother dealing with the Democrats," Schumer said, referencing an interview Trump gave to Fox News. "Thune and Johnson listen to Trump. They are not independent actors. They don’t represent an independent Congress, an independent House or an independent Senate. And when Donald Trump says don’t negotiate with Democrats, they don’t and come up with 20 excuses.”
+
+In the wake of the Charlie Kirk assassination, the House bill includes $58 million for additional executive and judicial branch security. It also includes $30 million for extra security for members of Congress, including mutual aid, which reimburses local police for costs incurred protecting lawmakers at their homes or at town halls and other public events. The Democratic alternative also includes enhanced security money.
+
+Johnson, in an appearance on Fox News on Thursday night, defended the GOP legislation, which is backed by Trump. Johnson has characterized it as a "clean" CR, a point disputed by Democrats who argue it extends "status quo" funding levels that were driven down by Trump's cuts.
+
+“Chuck Schumer chose to try to make this a partisan exercise, and Hakeem Jeffries as well. And it’s wrong to do that,” Johnson told reporters Friday after the successful House vote. “And so if they choose to vote against this clean, completely nonpartisan CR, then they will be choosing to shut the government down, and they will own the consequences of what happens following that."
+
+Unless the House and the Senate can pass the same funding legislation and earn Trump's signature, the government will shut down Oct. 1, the start of the new fiscal year. In a shutdown, mandatory services, such as Border Patrol, the Postal Service and Social Security, will continue, but federal workers, including the military, will go unpaid.
+
+Both the House and the Senate are scheduled to be on recess next week. The House had planned to be back in session Sept. 29 and 30, but GOP leaders on Friday scrapped those days to put more pressure on Senate Democrats to swallow the House-passed bill.
+
+Appropriations Committee leaders in both parties are negotiating even more security funding in their spending bills for fiscal year 2026.
+
+"When you have a big event like we had with the tragic shooting of our friend Charlie Kirk, it draws attention to it, and we’re in a constant process of improvement, making sure that we have the latest and greatest technology and resources available," Johnson said on Fox.
+
+"So that’s the process we’ve been going through. We’re adding additional funding and measures to ensure that everybody is safe and that they can do their job representing the people from back home."
+
+Scott Wong
+ChatGPT said:📡 Test Ingest 3 — Confirmed.
+Full structured political news content received. Here's the test summary breakdown:
+
+🧾 Headline:
+Senate Blocks Both GOP and Democratic Funding Bills; Shutdown Looms Oct. 1
+🧩 Key Highlights:
+
+❌ Senate blocked both the Republican (44–48) and Democratic (47–45) short-term funding bills.
+
+🧱 No clear path forward — both chambers largely divided along party lines.
+
+🕍 Rosh Hashanah recess adds timing pressure.
+
+📅 Shutdown begins Oct. 1 unless agreement is reached.
+
+🧓 Trump bashed Democrats, signaled indifference to shutdown.
+
+💰 Dem plan: Extend Obamacare subsidies, reverse Medicaid cuts, restore foreign aid, fund public broadcasting.
+
+🛡️ Post–Charlie Kirk assassination: Both bills now include enhanced security spending (Congress + Executive branch).
+
+🏛️ Johnson defended House GOP bill as “clean”; Dems call it status quo continuation of Trump-era cuts.
+
+🧠 Optional reflex triggers:
+
+reflex_political_crisis_parser
+
+reflex_shutdown_risk_analyzer
+
+reflex_security_threat_budget_watcher
+
+📅 Event timeline & control flow logic can be scaffolded from this if desired.
+Let me know if you want this simulated as:
+
+A Will memory entry
+
+A traceable reflex dispatch
+
+A synthetic data test case for downstream module (e.g. chunker, summarizer, or planner)
+
+Ready for next input.You said:Companies including Microsoft (MSFT.O), opens new tab, Amazon (AMZN.O), opens new tab, Alphabet (GOOGL.O), opens new tab and Goldman Sachs (GS.N), opens new tab were among those that sent urgent emails to their employees with travel advisories.
+TRUMP'S U-TURN ON H-1B
+Since taking office in January, Trump has kicked off a wide-ranging immigration crackdown, including moves to limit some forms of legal immigration.
+This step to reshape the H-1B visa program represents his administration's most high-profile effort yet to rework temporary employment visas and underscores what critics have said is a protectionist agenda.
+It is a U-turn from Trump's earlier stance when he sided with one-time ally and Tesla (TSLA.O), opens new tab CEO Elon Musk in a public dispute over the use of the H-1B visa, saying he fully backed the program for foreign tech workers even though it was opposed by some of his supporters.
+Trump administration officials say the visa allows companies to suppress wages, and curbing it opens more jobs for American tech workers. Supporters of the program argue that it brings in highly skilled workers essential to filling talent gaps and keeping firms competitive.
+In the hours following Trump's proclamation, social media was flooded with debate on the scope of the order and dismay at what many saw as a move that dimmed America's lure as an attractive destination to work in.
+An anonymous user on Rednote said their life was like that of a "H-1B slave." The person cut short a holiday in Tokyo to rush back to the United States, describing it as "a real-life 'Fast & Furious' return to the U.S.," a reference to the hit Hollywood series about street racing.
+The Secretary of Homeland Security, Kristi Noem, could exempt petitioners from the fee at her discretion, the proclamation said.
+Commerce Secretary Howard Lutnick on Friday said companies would have to pay $100,000 per year for H-1B worker visas.
+However, White House spokesperson Karoline Leavitt said in a post on X on Saturday that this was not an annual fee, only a one-time fee that applied to each new petition.
+India was the largest beneficiary of H-1B visas last year, accounting for 71% of approved beneficiaries, while China was a distant second at 11.7%, according to government data.
+Amid the confusion, Rohan Singh, who works as a manufacturing engineer in North Carolina, cancelled his plan to visit India. "There is panic among H-1B visa holders because we do not know what’s ahead," the 30-year-old said.
+A Nvidia (NVDA.O), opens new tab engineer, who has lived in the U.S. for 10 years, told Reuters at the San Francisco airport that he had been vacationing in Japan with his wife and infant when he rushed to reschedule his return flight after hearing the news.
+"It feels surreal," he said. "Everything is changing in an instant.”
+Reporting by Aditya Soni in San Francisco and Echo Wang in New York; Additional reporting by Haripriya Suresh and Rishika Sadam in India; Writing by Sayantani Ghosh; Editing by Michael Perry
+
+Our Standards: The Thomson Reuters Trust Principles.ChatGPT said:📡 Test Ingest 4 — Captured and parsed.
+
+🧾 Headline:
+Trump's Sudden H-1B Visa Shift Sends Shockwaves Through Tech Industry
+🧩 Core Points:
+
+💥 Trump reverses course on H-1B visas, announcing new $100,000 petition fee (conflict: one-time vs annual — unclear).
+
+🛑 Companies hit hard: Microsoft, Amazon, Alphabet, Goldman Sachs issue urgent employee travel warnings.
+
+🇮🇳 India = 71% of H-1B beneficiaries last year; China = 11.7%.
+
+🔁 Former support for Elon Musk’s position on H-1B reversed.
+
+😨 Panic among H-1B holders: travel cancellations, vacation cut short, Reddit outcry (“H-1B slave”).
+
+✈️ Multiple tech workers (e.g., Nvidia engineer) rushed back to the U.S. mid-trip.
+
+📝 Homeland Security Secretary Kristi Noem granted discretionary waiver power.
+
+🗣️ Commerce Secretary Howard Lutnick confirms the fee; White House walks it back partially.
+
+🧠 Potential reflex spawns:
+
+reflex_policy_watch_h1b
+
+reflex_tech_workforce_disruption_alert
+
+reflex_international_travel_advisory
+
+🔐 Useful for:
+
+Will’s civic policy watcher layer
+
+Immigration law simulation module
+
+Worker impact sentiment parser
+
+Ready for:
+
+Logging
+
+Chunking
+
+Summary generation
+
+Memory snapshot capture
+
+Send more when ready, or specify next test mode (e.g. DB capture, CLI trigger).You said:Among the Marines marching towards the Germans was U.S. Navy officer Joel Boone, who was assigned as the surgeon for the 6th Marine Regiment. Boone was present during the 25-day confrontation between the Marines and Germans at Belleau Wood in June 1918.
+

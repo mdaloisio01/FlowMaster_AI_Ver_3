@@ -1,0 +1,47 @@
+{
+  "version": "1.0",
+  "phase": 0.7,
+
+  "paths": {
+    "chat_logs_dir": "repo/chat_logs",
+    "chunker_input_root": "repo",
+    "db_path": "chunk_store.db"
+  },
+
+  "autosave": {
+    "enabled": true,
+    "interval_minutes": 3,
+    "bundle_token_limit": 10000,
+    "catch_up_enabled": true,
+    "daily_snapshot": {
+      "enabled": true,
+      "time_local": "23:59"
+    }
+  },
+
+  "post_save_actions": {
+    "run_chunker": true,
+    "export_txt_chunks": true,
+    "git_auto_commit": false,
+    "git_auto_push": false
+  },
+
+  "dedupe": {
+    "method": "content_hash_sha256",
+    "normalize_headers": true,
+    "normalize_whitespace": true
+  },
+
+  "metadata_defaults": {
+    "topic": "general",
+    "phase": 0.7,
+    "tags": ["chatlog", "autosave", "will"],
+    "filename_pattern": "YYYY-MM-DD__{topic}__cp-{seq}.md"
+  },
+
+  "safety": {
+    "max_file_size_mb": 20,
+    "ignore_folders": [".git", "node_modules", "__pycache__"],
+    "ignore_extensions": [".jpg", ".png", ".gif", ".exe", ".zip", ".pdf"]
+  }
+}

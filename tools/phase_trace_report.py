@@ -1,76 +1,83 @@
-# tools/phase_trace_report.py
+#!/usr/bin/env python3
+"""
+Phase-neutral trace summary.
+- Reads current phase from configs/ironroot_manifest_data.json
+- Summarizes recent entries from logs/reflex_trace_log.jsonl (if present)
+No dependency on boot/*.
+"""
+
 from __future__ import annotations
-
-from boot.boot_path_initializer import inject_paths
-inject_paths()
-
 import json
 from pathlib import Path
-from typing import Any, List, Dict
+import sys
+from typing import Iterable
 
-from core.phase_control import REQUIRED_PHASE, ensure_phase
-from core.memory_interface import log_memory_event
-from core.trace_logger import log_trace_event
+REPO_ROOT = Path(__file__).resolve().parents[1]
+MANIFEST = REPO_ROOT / "configs" / "ironroot_manifest_data.json"
+TRACE_LOG = REPO_ROOT / "logs" / "reflex_trace_log.jsonl"
 
+def read_manifest_phase() -> str:
+    if not MANIFEST.exists():
+        return "<manifest-missing>"
+    try:
+        with MANIFEST.open("r", encoding="utf-8") as f:
+            data = json.load(f)
+        return str(data.get("current_phase", "") or "<phase-missing>").strip()
+    except Exception as e:
+        return f"<manifest-error:{e}>"
 
-MEM_FILE = Path("logs/will_memory_log.json")
-TRACE_FILE = Path("logs/reflex_trace_log.json")
-
-
-def _load_json_events(path: Path) -> List[Dict[str, Any]]:
+def tail_lines(path: Path, max_lines: int = 200) -> Iterable[str]:
     if not path.exists():
         return []
-    text = path.read_text(encoding="utf-8").strip()
-    if not text:
-        return []
     try:
-        data = json.loads(text)
-        if isinstance(data, list):
-            return data
-        if isinstance(data, dict):
-            return [data]
+        # Simple, robust tail without external deps
+        with path.open("r", encoding="utf-8", errors="replace") as f:
+            lines = f.readlines()[-max_lines:]
+        return lines
     except Exception:
-        out: List[Dict[str, Any]] = []
-        for line in text.splitlines():
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                obj = json.loads(line)
-                if isinstance(obj, dict):
-                    out.append(obj)
-            except Exception:
-                continue
-        return out
-    return []
+        return []
 
+def parse_trace(lines: Iterable[str], max_events: int = 50):
+    events = []
+    for raw in reversed(list(lines)):  # latest first
+        raw = raw.strip()
+        if not raw:
+            continue
+        try:
+            obj = json.loads(raw)
+            events.append({
+                "ts": obj.get("ts") or obj.get("time") or "",
+                "event": obj.get("event") or obj.get("type") or "",
+                "source": obj.get("source") or obj.get("tool") or "",
+                "status": obj.get("status") or "",
+            })
+            if len(events) >= max_events:
+                break
+        except Exception:
+            # Skip non-JSON lines
+            continue
+    return events
 
-def run_cli() -> None:
-    ensure_phase()
+def run_cli(argv: list[str]) -> int:
+    phase = read_manifest_phase()
+    print(f"current_phase: {phase}")
 
-    tool_name = Path(__file__).as_posix()
-    log_memory_event(
-        "phase_trace_report start",
-        source=tool_name,
-        tags=["tool", "start", "phase_trace_report"],
-        content="starting",
-        phase=REQUIRED_PHASE,
-    )
+    if not TRACE_LOG.exists():
+        print(f"trace: {TRACE_LOG} (absent)")
+        return 0
 
-    mem = _load_json_events(MEM_FILE)
-    trc = _load_json_events(TRACE_FILE)
+    lines = tail_lines(TRACE_LOG, max_lines=500)
+    events = parse_trace(lines, max_events=50)
 
-    print(f"Phase Trace Report @ REQUIRED_PHASE={REQUIRED_PHASE}")
-    print(f"- memory events: {len(mem)}")
-    print(f"- trace events : {len(trc)}")
-
-    log_trace_event(
-        "phase_trace_report done",
-        source=tool_name,
-        tags=["tool", "done", "phase_trace_report"],
-        phase=REQUIRED_PHASE,
-    )
-
+    print(f"trace_file: {TRACE_LOG}")
+    print(f"recent_events: {len(events)}")
+    for e in events:
+        ts = e["ts"] or "-"
+        ev = e["event"] or "-"
+        src = e["source"] or "-"
+        st  = e["status"] or "-"
+        print(f"- [{ts}] {ev} (src={src}, status={st})")
+    return 0
 
 if __name__ == "__main__":
-    run_cli()
+    sys.exit(run_cli(sys.argv[1:]))

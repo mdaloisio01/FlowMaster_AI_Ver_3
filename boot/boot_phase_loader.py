@@ -1,83 +1,76 @@
-# boot/boot_phase_loader.py
-# Phase gate for boot + automatic one-time seed preload.
-# Behavior:
-#   - On first-ever boot (no lock file): ingest /seeds and create root/first_boot.lock
-#   - On later boots: skip ingest and continue normally
+from __future__ import annotations
+# boot/boot_phase_loader.py — boot loader (info-only phase, updated logging)
 
-from boot.boot_path_initializer import inject_paths
-inject_paths()
-
+import sys
 from pathlib import Path
-from typing import Dict, Any
 
-from core.phase_control import REQUIRED_PHASE, get_current_phase, ensure_phase
-from core.memory_interface import log_memory_event
-from core.trace_logger import log_trace_event
+# Ensure repo root on sys.path (.../boot -> repo root)
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-LOCK_FILE = Path("root/first_boot.lock")
+from boot import boot_path_initializer as bpi
+bpi.inject_paths()
+
+from core.trace_logger import log_trace_event, log_memory_event
+from core.phase_control import get_current_phase
 
 
-def _ingest_seeds_once() -> Dict[str, Any]:
-    """
-    Ingest seeds exactly once per installation.
-    Never raises; returns a summary dict.
-    """
-    if LOCK_FILE.exists():
-        return {"skipped": True, "reason": "lock_exists", "lock_path": LOCK_FILE.as_posix()}
-
-    # Import lazily to avoid overhead on normal boots
-    try:
-        from tools.ingest_seeds import ingest_seeds  # type: ignore
-    except Exception as e:
-        return {"skipped": True, "reason": f"import_failed: {e}"}
-
-    try:
-        summary = ingest_seeds(force=False, dry_run=False)
-        return summary or {"skipped": False, "result": "ok"}
-    except Exception as e:
-        return {"skipped": True, "reason": f"ingest_failed: {e}"}
+def _lock_path() -> Path:
+    # Matches the message you observed earlier: root/first_boot.lock
+    return _REPO_ROOT / "root" / "first_boot.lock"
 
 
 def run_cli() -> None:
-    # Enforce phase before any boot actions
-    ensure_phase()
-    cur = get_current_phase()
-    src = Path(__file__).as_posix()
+    phase = get_current_phase()
+    lp = _lock_path()
 
-    # Log boot start
-    log_memory_event(
-        event_text="boot_phase_loader start",
-        source=src,
-        tags=["boot", "start", "phase_loader"],
-        content={"required_phase": REQUIRED_PHASE, "current_phase": cur},
-        phase=REQUIRED_PHASE,
-    )
-
-    # Automatic one-time seed preload (first boot only)
-    preload_summary = _ingest_seeds_once()
-    if preload_summary.get("skipped"):
-        reason = preload_summary.get("reason")
-        if reason == "lock_exists":
-            print(f"Seed preload: skipped (lock present at {preload_summary.get('lock_path')}).")
-        else:
-            # import_failed / ingest_failed etc.
-            print(f"Seed preload: skipped ({reason}).")
-    else:
-        ing = preload_summary.get("ingested", 0)
-        print(f"Seed preload: complete, ingested {ing} file(s).")
-        if preload_summary.get("lock_path"):
-            print(f"Lock created at: {preload_summary['lock_path']}")
-
-    # Log boot done
+    # Start
     log_trace_event(
-        description="boot_phase_loader done",
-        source=src,
-        tags=["boot", "done", "phase_loader"],
-        content={"preload": preload_summary},
-        phase=REQUIRED_PHASE,
+        "boot_phase_loader.start",
+        {"lock": str(lp)},
+        source="boot.boot_phase_loader",
+        phase=phase,
     )
 
-    print(f"Boot OK @ phase {cur} (required {REQUIRED_PHASE}).")
+    try:
+        if lp.exists():
+            print("Seed preload: skipped (lock present at root/first_boot.lock).")
+            log_trace_event(
+                "boot_phase_loader.skip_seeding",
+                {"lock": str(lp), "reason": "lock-present"},
+                source="boot.boot_phase_loader",
+                phase=phase,
+            )
+        else:
+            # Prepare directories and create the lock to mark first-boot done.
+            lp.parent.mkdir(parents=True, exist_ok=True)
+            lp.write_text("ok", encoding="utf-8")
+
+            log_memory_event(
+                "boot_phase_loader.seeded",
+                {"created_lock": str(lp)},
+                source="boot.boot_phase_loader",
+                phase=phase,
+            )
+            print("Seed preload: completed (lock created at root/first_boot.lock).")
+
+        # Done
+        log_trace_event(
+            "boot_phase_loader.done",
+            {"status": "ok"},
+            source="boot.boot_phase_loader",
+            phase=phase,
+        )
+    except Exception as e:
+        # Log and re-raise as non-zero exit via SystemExit
+        log_trace_event(
+            "boot_phase_loader.error",
+            {"error": repr(e)},
+            source="boot.boot_phase_loader",
+            phase=phase,
+        )
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

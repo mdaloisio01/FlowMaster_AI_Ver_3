@@ -1,3 +1,13 @@
+# === IronRoot Phase Guard (auto-injected) ===
+import sys, os
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from boot.boot_path_initializer import inject_paths
+inject_paths()
+from core.phase_control import ensure_phase
+REQUIRED_PHASE = 0.7
+ensure_phase(REQUIRED_PHASE)
+# === /IronRoot Phase Guard ===
+
 # core/memory_log_db.py
 # Purpose: simple helpers around the memory log JSON (+ test-name shims)
 # Policy: forward-slash paths, UTF-8 JSON writes, append-not-overwrite

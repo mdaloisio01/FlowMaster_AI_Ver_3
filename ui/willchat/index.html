@@ -1,0 +1,66 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>WillChat (Local)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    html,body{margin:0;padding:0;height:100%;font-family:system-ui,Segoe UI,Arial}
+    .wrap{max-width:900px;margin:0 auto;padding:16px}
+    h1{font-size:20px;margin:12px 0}
+    .row{display:flex;gap:8px}
+    textarea{flex:1;min-height:80px;padding:10px;font-size:16px}
+    button{padding:10px 14px;font-size:16px;cursor:pointer}
+    .out{white-space:pre-wrap;border:1px solid #ddd;border-radius:8px;padding:12px;margin-top:12px;background:#fafafa}
+    .meta{color:#666;font-size:12px;margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>WillChat — Local RAG (Ollama)</h1>
+    <div class="row">
+      <textarea id="q" placeholder="Ask Will anything… e.g., What did I plan for the Blue Lake larch trip?"></textarea>
+      <button id="ask">Ask</button>
+    </div>
+    <div id="status" class="meta"></div>
+    <div id="answer" class="out"></div>
+    <div id="sources" class="meta"></div>
+  </div>
+
+  <script>
+    const ASK_URL = "http://127.0.0.1:8766/ask";
+
+    async function askWill() {
+      const q = document.getElementById("q").value.trim();
+      const status = document.getElementById("status");
+      const answer = document.getElementById("answer");
+      const sources = document.getElementById("sources");
+      if (!q) { status.textContent = "Type a question first."; return; }
+      status.textContent = "Thinking…";
+      answer.textContent = "";
+      sources.textContent = "";
+
+      try {
+        const res = await fetch(ASK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ q, k: 5 })
+        });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const data = await res.json();
+        answer.textContent = data.answer || "(no answer)";
+        const srcs = (data.sources || []).map(s => `${s.file_path}#chunk-${s.chunk_index}`);
+        sources.textContent = srcs.length ? "Sources:\n - " + srcs.join("\n - ") : "Sources: (none)";
+        status.textContent = `Model: ${data.model || "local"} • ${data.duration_ms || 0} ms`;
+      } catch (e) {
+        status.textContent = "Error: " + e.message;
+      }
+    }
+
+    document.getElementById("ask").addEventListener("click", askWill);
+    document.getElementById("q").addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") askWill();
+    });
+  </script>
+</body>
+</html>

@@ -1,11 +1,11 @@
 {
-  "boot": "boot_core",
-  "configs": "config_core",
-  "core": "memory_core",
-  "reflexes/reflex_core": "reflex_core",
-  "tools": "cli_tool",
-  "gui": "gui_layer",
-  "sandbox": "sandbox_env",
-  "logs": "log_output",
-  "tests": "test_runner"
+  "boot": "bootloaders_and_path_setup",
+  "configs": "config_and_policy_files",
+  "core": "memory_db_and_trace_core",
+  "logs": "memory_and_trace_logs",
+  "reflexes": "reflex_modules",
+  "tools": "cli_tools_and_helpers",
+  "tests": "unit_and_phase_tests",
+  "sandbox": "experimental_and_debug_code",
+  "chunks": "chunk_output"
 }

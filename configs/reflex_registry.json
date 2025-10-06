@@ -1,0 +1,14 @@
+{
+  "reflexes": {
+    "reflex_trace_ping": {
+      "path": "reflexes/reflex_core/reflex_trace_ping.py",
+      "phase": 0.4,
+      "description": "Tests memory + trace logging"
+    },
+    "reflex_self_test_runner": {
+      "path": "reflexes/reflex_core/reflex_self_test_runner.py",
+      "phase": 0.4,
+      "description": "Executes internal reflex test cycle and memory trace checks"
+    }
+  }
+}
