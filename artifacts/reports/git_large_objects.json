@@ -1,0 +1,252 @@
+﻿[
+    {
+        "object":  "0f527d10785a2809f3c0786dbab8ff9a92c2dfcf",
+        "size":  145559,
+        "path":  "sandbox/inventory_report.json"
+    },
+    {
+        "object":  "fe79ef2a3af36eedd62b57ea2d2349d33ee2d97d",
+        "size":  94208,
+        "path":  "chunk_store.db"
+    },
+    {
+        "object":  "2a3d20cb0df6630969c0f3df3532ceb6e238c5aa",
+        "size":  46114,
+        "path":  "repo/chat_logs/2025-09-21__flowmaster-ai-initial-greeting__cp-01.md"
+    },
+    {
+        "object":  "3b6b3b287559362c9563cedbe1394725b93013b5",
+        "size":  37396,
+        "path":  "configs/FlowMaster_OG_dev_file.md"
+    },
+    {
+        "object":  "e3ef0c60cc998112f08937b80002f786be1916e9",
+        "size":  19130,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "a00582c184331cf5e71bfbbbb74af8ce0820e251",
+        "size":  19097,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "25f75d4d2bb9c421106e0816ecee1df48c9df136",
+        "size":  18241,
+        "path":  "90 - ironroot_manifest_data.json"
+    },
+    {
+        "object":  "daa181642de38c62a22fd384f477f29b85490736",
+        "size":  18177,
+        "path":  "repo/chat_logs/2025-10-02__willchat__cp-01.txt"
+    },
+    {
+        "object":  "acc10c519f49b5faf0161b246006eff28b8b58d1",
+        "size":  18170,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "a510043b643c12645c620ee11047ea294074681a",
+        "size":  18170,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "cd678812a8e153317235103b84e9d61b56b11018",
+        "size":  17805,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "0d0e2eed7f472131f3810672317aec85f078e094",
+        "size":  17783,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "be76f570cf5403b0ee1d34b0555108e7ae4e8ea1",
+        "size":  17698,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "b61cec961b73e210359272380a7d55b376730988",
+        "size":  17586,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "3a59f248e021ee1aa7814d8499878af30cfd84e4",
+        "size":  17011,
+        "path":  "configs/ironroot_manifest_data.json"
+    },
+    {
+        "object":  "c4df8ff5fa57d54ce500461f910a0c1d0f43ffe0",
+        "size":  16817,
+        "path":  "configs/ironroot_file_history_with_dependencies.json"
+    },
+    {
+        "object":  "e77e17a4ed7ca30c73b988d28509b5e08580913f",
+        "size":  16736,
+        "path":  "configs/ironroot_file_history_with_dependencies.json"
+    },
+    {
+        "object":  "0a8dd5896f739c2d8b854cc4394a3db7fb2d4820",
+        "size":  16646,
+        "path":  "configs/ironroot_file_history_with_dependencies.json"
+    },
+    {
+        "object":  "21018bb4fc48f8b67ac07a20128111e19a0e4c98",
+        "size":  16205,
+        "path":  "configs/ironroot_file_history_with_dependencies.json"
+    },
+    {
+        "object":  "812cdafbe722834af919d0f91026f6ce19f4f2af",
+        "size":  13733,
+        "path":  "configs/Will_v1-3_merger_seed.md"
+    },
+    {
+        "object":  "17e4c0b14c3c7f9f1c83eae86e86d610dbe899c0",
+        "size":  13217,
+        "path":  "tools/autosave/autosave_helper.py"
+    },
+    {
+        "object":  "319e2a8e0146a9da6008e44ed921a60bdf203a4a",
+        "size":  12365,
+        "path":  "tests/bot review v1.txt"
+    },
+    {
+        "object":  "72a2b60f43319a99be342881e02dba31a78c3e8c",
+        "size":  11839,
+        "path":  "configs/phase_stabilization_templates.md"
+    },
+    {
+        "object":  "b8ba463030a5780eb176bd54e3dadcb6a35c1dbc",
+        "size":  10974,
+        "path":  "configs/ironroot_file_history_with_dependencies.json"
+    },
+    {
+        "object":  "61ce7e34000d6434f2e901c492cf71f39a02a9bf",
+        "size":  10824,
+        "path":  "configs/ironroot_file_history_with_dependencies.json"
+    },
+    {
+        "object":  "51c506ce957802897e6df8b8c4a0a6c2120c8ede",
+        "size":  10448,
+        "path":  "configs/IronSpine_Phases_0_0-0_6_dev_file.md"
+    },
+    {
+        "object":  "1d544857accfbacea8f68ccda258d6521d093820",
+        "size":  10174,
+        "path":  "core/snapshot_manager.py"
+    },
+    {
+        "object":  "a766da0721a08d47c50860285afd1449088452bf",
+        "size":  10017,
+        "path":  "seeds/will_brain_link_seed.md"
+    },
+    {
+        "object":  "963c9bc2533363810535894666f3f644520ef26b",
+        "size":  9835,
+        "path":  "core/snapshot_manager.py"
+    },
+    {
+        "object":  "7a04f5be7070f54d0663f25dadcd8eb2c19cffeb",
+        "size":  8970,
+        "path":  "chunks/2025-09-21__flowmaster-ai-initial-greeting__cp-01.md_chunk004.txt"
+    },
+    {
+        "object":  "6be1b811f9c94becd74634f20bc6c08ed4aa6e44",
+        "size":  8784,
+        "path":  "chunks/2025-09-21__flowmaster-ai-initial-greeting__cp-01.md_chunk002.txt"
+    },
+    {
+        "object":  "61ceffc3131c20392bab0b0cd94d94e62f9f9b8e",
+        "size":  8783,
+        "path":  "chunks/2025-09-21__flowmaster-ai-initial-greeting__cp-01.md_chunk001.txt"
+    },
+    {
+        "object":  "06561e3eedf3c449c809669b3d0a7589103a75a9",
+        "size":  8693,
+        "path":  "tools/will_search_panel.py"
+    },
+    {
+        "object":  "1fbfc6c2ebf36dfa0441de13eaa85be5a637ed6c",
+        "size":  8678,
+        "path":  "tools/chunker/chunker.py"
+    },
+    {
+        "object":  "0bdc6bf1938fa4c40a864b4a71e24a7d4d13d2ba",
+        "size":  8624,
+        "path":  "chunks/2025-09-21__flowmaster-ai-initial-greeting__cp-01.md_chunk000.txt"
+    },
+    {
+        "object":  "76e15ae1956950a364d5f72bc59ffc1d19bbc99d",
+        "size":  8433,
+        "path":  "tools/audit/will_inventory_probe.py"
+    },
+    {
+        "object":  "85b86160dba9625b25e3760f350e6fd7dae121f8",
+        "size":  8319,
+        "path":  "chunks/2025-09-21__flowmaster-ai-initial-greeting__cp-01.md_chunk003.txt"
+    },
+    {
+        "object":  "9fc52a400674f6256bc949afba95a65328aece72",
+        "size":  7980,
+        "path":  "tools/will_browser.py"
+    },
+    {
+        "object":  "47098bfa15dbf13f353e48a28aa9d6f95d20cc27",
+        "size":  7925,
+        "path":  "tools/ironroot_registrar.py"
+    },
+    {
+        "object":  "aaab543a17e49d9fee9027834bba1b20a3bf17ea",
+        "size":  7832,
+        "path":  "tools/autosave/userscripts/save_to_will.user.js"
+    },
+    {
+        "object":  "88252e95a3d0cc4d4d26588740aa8e80e9fb489e",
+        "size":  7614,
+        "path":  "tools/reflex_coverage_report.py"
+    },
+    {
+        "object":  "d3343e8c6a2fb9cff590931192f6deee9314694e",
+        "size":  7581,
+        "path":  "phase_seal_runner.ps1"
+    },
+    {
+        "object":  "84e110c35dd5974a4aec6d69c1990611c1e40585",
+        "size":  7573,
+        "path":  "load phase.md"
+    },
+    {
+        "object":  "488c37177dbe9cdcc370ad5d247d2b2f10c4bbe4",
+        "size":  7248,
+        "path":  "tools/reflex_compliance_guard.py"
+    },
+    {
+        "object":  "feda833c3081c326cb25fc6414ebaa1a046081d0",
+        "size":  6980,
+        "path":  "configs/dev_file_list.md"
+    },
+    {
+        "object":  "28fafd13a9f5d8b8c8a00ef02edad0813d80e973",
+        "size":  6918,
+        "path":  "configs/dev_file_list.md"
+    },
+    {
+        "object":  "ec9ec141887d5a554bdf946600e1c7580f6c3419",
+        "size":  6798,
+        "path":  "tools/db_schema_migrate.py"
+    },
+    {
+        "object":  "4157feff9e668066b08282ac95ade8bc0cccc11a",
+        "size":  6599,
+        "path":  "tools/trace_memory_crosscheck.py"
+    },
+    {
+        "object":  "498bd64cdc4d8638f11e605976f9b0f876ef8bca",
+        "size":  6437,
+        "path":  "tools/ironroot_registrar.py"
+    },
+    {
+        "object":  "add874ba1437c390a27c597e587cc5b098150a9b",
+        "size":  6304,
+        "path":  "ir_law.txt"
+    }
+]
